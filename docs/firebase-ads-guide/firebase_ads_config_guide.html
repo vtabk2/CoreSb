@@ -1,0 +1,1414 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Firebase Ads Config Guide · CodeBaseTemplate</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --text: #172033;
+      --muted: #647084;
+      --line: #dfe5ee;
+      --accent: #0f766e;
+      --code: #0f172a;
+      --code-bg: #eef2f7;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      line-height: 1.55;
+    }
+
+    header {
+      background: #0f172a;
+      color: #fff;
+      padding: 32px 24px;
+    }
+
+    header .wrap, main {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    h1, h2, h3 { line-height: 1.2; }
+    h1 { margin: 0 0 8px; font-size: 32px; }
+    h2 { margin: 36px 0 14px; font-size: 24px; }
+    h3 { margin: 26px 0 10px; font-size: 18px; }
+    p { margin: 8px 0 14px; }
+
+    main { padding: 24px; }
+
+    .note {
+      background: #ecfeff;
+      border: 1px solid #bae6fd;
+      border-left: 4px solid var(--accent);
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      margin: 16px 0;
+    }
+
+    code {
+      color: var(--code);
+      background: var(--code-bg);
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 0.95em;
+    }
+
+    pre {
+      overflow: auto;
+      background: #111827;
+      color: #e5e7eb;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+      margin: 12px 0 22px;
+      border: 1px solid var(--line);
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 700;
+    }
+
+    tbody tr:last-child td { border-bottom: 0; }
+
+    .toc {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .toc a {
+      display: block;
+      color: var(--accent);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      text-decoration: none;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
+    }
+
+    figure {
+      margin: 0;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    figure img {
+      width: 100%;
+      max-height: 520px;
+      object-fit: contain;
+      display: block;
+      background: #eef2f7;
+      border-radius: 6px;
+    }
+
+    figcaption {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      word-break: break-word;
+    }
+
+    .pill {
+      display: inline-block;
+      color: #075985;
+      background: #e0f2fe;
+      border: 1px solid #bae6fd;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 12px;
+      margin: 2px;
+    }
+
+    /* Guide layout v2 */
+    :root {
+      --bg: #f5f7fb;
+      --panel-soft: #f8fafc;
+      --text: #172033;
+      --muted: #657187;
+      --line: #dfe5ef;
+      --accent: #2563eb;
+      --accent-strong: #1d4ed8;
+      --accent-soft: #eff6ff;
+      --success: #059669;
+      --warning: #d97706;
+      --danger: #dc2626;
+      --code: #dbeafe;
+      --code-bg: #111827;
+      --radius: 16px;
+      --shadow: 0 12px 32px rgba(15, 23, 42, 0.07);
+    }
+
+    html { scroll-behavior: smooth; }
+    body { line-height: 1.62; }
+
+    header {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(125deg, #0b1220 0%, #162f62 62%, #155e75 120%);
+      padding: 48px 24px 42px;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      right: -90px;
+      top: -250px;
+      border-radius: 50%;
+      background: rgba(96, 165, 250, 0.14);
+      box-shadow: -210px 220px 0 rgba(45, 212, 191, 0.07);
+      pointer-events: none;
+    }
+
+    header .wrap, .layout { max-width: 1380px; margin: 0 auto; }
+    header .wrap { position: relative; z-index: 1; }
+    h1 { margin: 10px 0 12px; max-width: 850px; font-size: clamp(32px, 5vw, 52px); letter-spacing: -0.04em; }
+    h2 { margin: 0 0 14px; font-size: 27px; letter-spacing: -0.02em; }
+    h3 { margin: 30px 0 10px; font-size: 19px; }
+    a { color: var(--accent-strong); }
+    a:hover { color: #1e40af; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 999px;
+      background: rgba(255,255,255,.09);
+      color: #dbeafe;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .hero-copy { max-width: 850px; color: #cbd5e1; font-size: 17px; }
+    .hero-copy code { background: rgba(255,255,255,.1); color: #e0f2fe; }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .hero-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 34px;
+      padding: 6px 11px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 9px;
+      background: rgba(15,23,42,.28);
+      color: #e2e8f0;
+      font-size: 13px;
+    }
+
+    .skip-link { position: absolute; left: -9999px; }
+    .skip-link:focus { left: 16px; top: 16px; z-index: 100; padding: 10px 14px; background: white; border-radius: 8px; }
+
+    main.layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 28px;
+      align-items: start;
+      padding: 28px 24px 64px;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 20px;
+      max-height: calc(100vh - 40px);
+      overflow: auto;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.9);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .sidebar-title { margin: 2px 8px 10px; color: #475569; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .toc { display: grid; grid-template-columns: 1fr; gap: 3px; margin: 0; padding: 0; list-style: none; }
+    .toc a {
+      display: flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 650;
+      line-height: 1.3;
+      text-decoration: none;
+      transition: .18s ease;
+    }
+    .toc a:hover { background: #f1f5f9; color: #0f172a; }
+    .toc a.active { background: var(--accent-soft); color: var(--accent-strong); box-shadow: inset 3px 0 0 var(--accent); }
+
+    .content { min-width: 0; }
+    .content > section {
+      scroll-margin-top: 24px;
+      margin: 0 0 24px;
+      padding: clamp(20px, 3vw, 34px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: 0 5px 18px rgba(15,23,42,.035);
+    }
+
+    .section-kicker { margin: 0 0 8px; color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+    .lead { max-width: 860px; color: #475569; font-size: 17px; }
+    .quick-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 22px 0 4px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 9px 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: white;
+      color: #334155;
+      font-weight: 750;
+      text-decoration: none;
+    }
+    .button.primary { border-color: var(--accent); background: var(--accent); color: white; }
+    .button:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(15,23,42,.08); }
+
+    .stat-grid, .decision-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
+    .stat, .decision-card { padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel-soft); }
+    .stat strong { display: block; color: #0f172a; font-size: 24px; }
+    .stat span, .decision-card p { color: var(--muted); font-size: 13px; }
+    .decision-card h3 { margin: 0 0 6px; font-size: 16px; }
+
+    .steps { display: grid; gap: 12px; margin: 24px 0; padding: 0; list-style: none; counter-reset: guide-step; }
+    .steps li {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      counter-increment: guide-step;
+    }
+    .steps li::before {
+      content: counter(guide-step);
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      font-weight: 850;
+    }
+    .steps strong { display: block; margin: 1px 0 3px; }
+    .steps p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    .checklist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin: 16px 0; padding: 0; list-style: none; }
+    .checklist li { position: relative; padding: 11px 12px 11px 38px; border: 1px solid #bbf7d0; border-radius: 10px; background: #f0fdf4; font-size: 14px; }
+    .checklist li::before { content: "✓"; position: absolute; left: 13px; color: var(--success); font-weight: 900; }
+
+    .note { border-radius: 10px; background: var(--accent-soft); border-color: #bfdbfe; border-left-color: var(--accent); }
+    .note.warning { border-color: #fde68a; border-left-color: var(--warning); background: #fffbeb; }
+    .note.danger { border-color: #fecaca; border-left-color: var(--danger); background: #fef2f2; }
+    code { color: #1e3a8a; background: #eff6ff; word-break: break-word; }
+    pre { position: relative; padding: 20px; border: 1px solid #263244; border-radius: 12px; background: var(--code-bg); }
+    pre code { padding: 0; background: transparent; color: #dbeafe; word-break: normal; }
+    .copy-button { position: absolute; top: 9px; right: 9px; padding: 6px 9px; border: 1px solid #475569; border-radius: 7px; background: #1e293b; color: #e2e8f0; cursor: pointer; font-size: 12px; }
+    .copy-button:hover { background: #334155; }
+
+    .table-wrap { width: 100%; overflow-x: auto; margin: 12px 0 22px; border: 1px solid var(--line); border-radius: 12px; }
+    .table-wrap table { margin: 0; border: 0; }
+    th, td { padding: 11px 13px; }
+    tbody tr:hover { background: #f8fafc; }
+    .key-toolbar { display: flex; gap: 10px; align-items: center; margin: 18px 0 12px; }
+    .key-search { width: 100%; min-height: 44px; padding: 10px 13px; border: 1px solid #cbd5e1; border-radius: 10px; background: white; color: var(--text); font: inherit; }
+    .key-search:focus { outline: 3px solid #bfdbfe; border-color: var(--accent); }
+    .result-count { flex: none; color: var(--muted); font-size: 13px; }
+    .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 3px 8px; font-size: 11px; font-weight: 800; white-space: nowrap; }
+    .badge.json { background: #ede9fe; color: #6d28d9; }
+    .badge.boolean { background: #dcfce7; color: #047857; }
+    .badge.dynamic { background: #ffedd5; color: #c2410c; }
+    .empty-state { display: none; padding: 20px; color: var(--muted); text-align: center; }
+
+    .config-keys {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 7px;
+      margin: -2px 0 16px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .config-keys::before {
+      content: "Key config";
+      padding: 4px 8px;
+      border-radius: 7px;
+      background: #e2e8f0;
+      color: #475569;
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+
+    .config-keys.field::before { content: "Field config"; background: #fef3c7; color: #92400e; }
+    .config-keys code { padding: 4px 8px; border: 1px solid #bfdbfe; border-radius: 7px; background: #f8fbff; }
+
+    figure { border-radius: 12px; transition: transform .18s ease, box-shadow .18s ease; }
+    figure:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+    @media (max-width: 980px) {
+      main.layout { grid-template-columns: 1fr; padding-top: 16px; }
+      .sidebar { position: sticky; top: 0; z-index: 20; max-height: none; margin: 0 -8px; padding: 8px; overflow-x: auto; border-radius: 12px; }
+      .sidebar-title { display: none; }
+      .toc { display: flex; width: max-content; }
+      .toc a { white-space: nowrap; }
+      .stat-grid, .decision-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      header { padding: 34px 18px 30px; }
+      main.layout { padding: 12px 12px 44px; gap: 16px; }
+      .content > section { padding: 20px 16px; border-radius: 13px; }
+      h2 { font-size: 23px; }
+      .steps li { grid-template-columns: 38px minmax(0, 1fr); padding: 13px; }
+      .checklist { grid-template-columns: 1fr; }
+      .key-toolbar { align-items: stretch; flex-direction: column; }
+      th, td { min-width: 130px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Bỏ qua menu, đến nội dung chính</a>
+  <header>
+    <div class="wrap">
+      <span class="eyebrow">CodeBaseTemplate · Remote Config</span>
+      <h1>Firebase Ads Config Guide</h1>
+      <p class="hero-copy">Tài liệu thao tác từ lúc tạo parameter đến khi kiểm tra quảng cáo trên thiết bị. Nội dung được đối chiếu từ <code>ConfigParam</code>, model/mapper, luồng resolve trong <code>core:config</code>, logic hiển thị của <code>core:ads</code> và defaults theo flavor.</p>
+      <div class="hero-meta" aria-label="Phạm vi tài liệu">
+        <span>✓ 26 nhóm parameter</span>
+        <span>✓ 6 loại quảng cáo</span>
+        <span>✓ Dev &amp; Prod defaults</span>
+        <span>✓ Responsive &amp; có tìm kiếm</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout" id="main-content">
+    <aside class="sidebar" aria-label="Mục lục tài liệu">
+      <p class="sidebar-title">Trong tài liệu này</p>
+      <nav>
+        <ul class="toc">
+          <li><a href="#overview">Tổng quan</a></li>
+          <li><a href="#guide-1">Guide 1 · Cấu hình từ đầu</a></li>
+          <li><a href="#keys">Danh sách key Firebase</a></li>
+          <li><a href="#ad-place">Schema ad place</a></li>
+          <li><a href="#ab-testing">A/B testing theo ad place</a></li>
+          <li><a href="#native">Native ads</a></li>
+          <li><a href="#banner">Banner ads</a></li>
+          <li><a href="#fullscreen">Fullscreen ads</a></li>
+          <li><a href="#app-open">App open ads</a></li>
+          <li><a href="#other">Config hệ thống khác</a></li>
+          <li><a href="#onboarding-ui">Custom UI Onboarding</a></li>
+          <li><a href="#gallery">Native UI gallery</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <article class="content">
+      <section id="overview">
+        <p class="section-kicker">Bắt đầu ở đây</p>
+        <h2>Chọn đúng phần trước khi cấu hình</h2>
+        <p class="lead">Nếu bạn đang tạo Firebase cho app mới, đi theo <strong>Guide 1</strong>. Nếu chỉ cần đổi một vị trí quảng cáo, mở <strong>Schema ad place</strong> và mục theo loại ad. Nếu đang chạy experiment, dùng phần <strong>A/B testing</strong>.</p>
+        <div class="quick-actions">
+          <a class="button primary" href="#guide-1">Bắt đầu Guide 1</a>
+          <a class="button" href="#keys">Tra cứu parameter</a>
+          <a class="button" href="#gallery">Chọn native template</a>
+        </div>
+        <div class="decision-grid">
+          <article class="decision-card">
+            <h3>Setup app mới</h3>
+            <p>Copy defaults đúng flavor, tạo parameter theo nhóm và kiểm tra từ global switch đến từng ad place.</p>
+          </article>
+          <article class="decision-card">
+            <h3>Đổi một ad place</h3>
+            <p>Xác định list chứa place, giữ đủ field bắt buộc rồi publish. Không sửa nhầm global config.</p>
+          </article>
+          <article class="decision-card">
+            <h3>Chạy A/B test</h3>
+            <p>Resolve list gốc trước, sau đó override toàn object qua <code>ad_place_ab_*</code>.</p>
+          </article>
+        </div>
+        <div class="stat-grid">
+          <div class="stat"><strong>3</strong><span>Danh sách ad place gốc</span></div>
+          <div class="stat"><strong>3 tầng</strong><span>Versioned → <code>*_2</code> → default</span></div>
+          <div class="stat"><strong>1 nguồn</strong><span><code>RemoteConfigRepository</code> sau fetch/parse/cache</span></div>
+        </div>
+      </section>
+
+      <section id="guide-1">
+        <p class="section-kicker">Guide 1 · Luồng chuẩn</p>
+        <h2>Cấu hình Firebase Ads từ đầu</h2>
+        <p class="lead">Thực hiện theo đúng thứ tự dưới đây để dễ khoanh vùng lỗi. Không nên paste toàn bộ config production rồi bật ads ngay từ lần publish đầu tiên.</p>
+
+        <ol class="steps">
+          <li><div><strong>Chọn flavor và lấy defaults làm baseline</strong><p>Dùng <code>app/src/dev/res/xml/remote_config_defaults.xml</code> khi debug và <code>app/src/prod/res/xml/remote_config_defaults.xml</code> khi release. Defaults ở <code>core/config/src/&lt;flavor&gt;/res/xml</code> là baseline của module; resource phía app có thể override khi merge.</p></div></li>
+          <li><div><strong>Tạo parameter đúng kiểu trên Firebase Console</strong><p>Các object/array JSON phải tạo dưới kiểu <strong>String</strong>. Chỉ <code>is_turn_on_ad_places_disabled_when_detect_test_ad</code> dùng kiểu <strong>Boolean</strong>. Key động <code>ad_place_ab_&lt;place_name&gt;</code> cũng là String.</p></div></li>
+          <li><div><strong>Cấu hình công tắc và chính sách toàn app</strong><p>Bắt đầu với <code>application_config</code>, country block, test-ad protection, consent và click protection. Giữ <code>is_enable_ads=false</code> nếu chưa sẵn sàng kiểm thử ad unit thật.</p></div></li>
+          <li><div><strong>Khai báo ba danh sách ad place</strong><p>Đặt banner/native vào <code>banner_native_ad_places</code>, app open vào <code>app_open_ad_places</code>, fullscreen vào <code>rewarded_rewardedinter_inter_ad_places</code>. Mỗi object cần tối thiểu <code>place_name</code>, <code>ad_id</code>, <code>ad_type</code>, <code>is_enable</code>.</p></div></li>
+          <li><div><strong>Thêm config global theo loại quảng cáo</strong><p>Thiết lập retry, interval, timeout, TTL và behavior trong <code>*_ad_config</code>. Global config không thay thế field nhận diện của từng place.</p></div></li>
+          <li><div><strong>Validate, publish có điều kiện và smoke test</strong><p>Validate JSON, dùng Firebase condition/experiment nếu rollout hạn chế, publish rồi force fetch trên debug. Kiểm tra log, consent, load/show/dismiss và fallback khi mất mạng.</p></div></li>
+        </ol>
+
+        <div class="note warning">
+          <strong>Quy tắc kiểu dữ liệu:</strong> Firebase Console không có kiểu JSON riêng cho luồng này. Hãy lưu JSON object/array dưới dạng <strong>String hợp lệ</strong>; không thêm comment, dấu phẩy cuối hoặc dùng single quote. JSON lỗi sẽ khiến model về default nội bộ; riêng list ad place lỗi/rỗng sẽ tiếp tục fallback sang key kế tiếp.
+        </div>
+
+        <h3>Thứ tự resolve thực tế</h3>
+        <pre><code>Firebase defaults (theo flavor)
+        ↓ fetchAndActivate()
+Remote Config value đã activate
+        ↓ parse bằng Moshi / primitive getter
+versioned ad-place key (khớp versionCode và list không rỗng)
+        ↓ nếu không dùng được
+fallback key *_2 (list không rỗng)
+        ↓ nếu không dùng được
+default ad-place key
+        ↓
+A/B override toàn object (nếu hợp lệ)
+        ↓
+Mapper → cache → AdsManager</code></pre>
+
+        <h3>Checklist trước khi publish</h3>
+        <ul class="checklist">
+          <li>Key khớp chính xác với bảng parameter</li>
+          <li>JSON parse được và không có trailing comma</li>
+          <li><code>place_name</code> không trùng trong các list</li>
+          <li><code>ad_type</code> đúng nhóm và đúng enum hỗ trợ</li>
+          <li>Ad unit ID đúng loại quảng cáo</li>
+          <li>Đã test cả fetch thành công và fallback defaults</li>
+          <li>Debug consent chỉ chứa test device</li>
+          <li>Rollout production có condition/experiment phù hợp</li>
+        </ul>
+
+        <div class="note">
+          <strong>Nguồn logic:</strong> <code>RemoteConfigService</code> gọi <code>setDefaultsAsync(R.xml.remote_config_defaults)</code> và <code>fetchAndActivate()</code>. <code>RemoteConfigRepositoryImpl</code> parse, map và cache config; các AdsManager đọc dữ liệu đã resolve từ repository.
+        </div>
+      </section>
+
+      <section id="keys">
+      <p class="section-kicker">Reference</p>
+      <h2>Danh sách key Firebase Remote Config</h2>
+      <p>Tìm theo key hoặc mục đích. Cột “Kiểu trên Console” là kiểu cần chọn khi tạo parameter Firebase.</p>
+      <div class="key-toolbar">
+        <input class="key-search" id="key-search" type="search" placeholder="Tìm key, ví dụ: splash, native, consent…" aria-label="Tìm Firebase parameter">
+        <span class="result-count" id="key-result-count" aria-live="polite"></span>
+      </div>
+      <table id="key-table">
+        <thead><tr><th>Key</th><th>Kiểu trên Console</th><th>Mục đích</th></tr></thead>
+        <tbody>
+          <tr><td><code>application_config</code></td><td><span class="badge json">String · JSON object</span></td><td>Cờ bật/tắt ads toàn app, intro/language/shortcut và dữ liệu onboarding ads.</td></tr>
+          <tr><td><code>iap_config</code></td><td><span class="badge json">String · JSON object</span></td><td>Điều khiển thời điểm hiển thị IAP, giao diện IAP v2, delay nút đóng và country block cho premium. Repository đọc lazy khi gọi <code>getIapConfig()</code>.</td></tr>
+          <tr><td><code>prevent_ad_click_config</code></td><td><span class="badge json">String · JSON object</span></td><td>Chặn hiển thị ads khi user click quảng cáo quá nhiều trong một session.</td></tr>
+          <tr><td><code>tutorial_config</code></td><td><span class="badge json">String · JSON object</span></td><td>Bật/tắt nhóm ad trong tutorial flow, gồm high-floor và fallback ad unit.</td></tr>
+          <tr><td><code>ads_disabled_by_country</code></td><td><span class="badge json">String · JSON array</span></td><td>Danh sách mã quốc gia tắt toàn bộ quảng cáo.</td></tr>
+          <tr><td><code>ad_places_disable_when_detect_test_ad</code></td><td><span class="badge json">String · JSON array</span></td><td>Danh sách place bị ẩn khi SDK phát hiện test ad.</td></tr>
+          <tr><td><code>is_turn_on_ad_places_disabled_when_detect_test_ad</code></td><td><span class="badge boolean">Boolean</span></td><td>Bật/tắt logic ẩn place khi detect test ad.</td></tr>
+          <tr><td><code>splash_screen_config</code></td><td><span class="badge json">String · JSON object</span></td><td>Điều khiển loại ads trên splash và timeout chờ load.</td></tr>
+          <tr><td><code>banner_native_ad_places</code></td><td><span class="badge json">String · JSON array</span></td><td>Các vị trí banner/native.</td></tr>
+          <tr><td><code>banner_native_ad_places_2</code></td><td><span class="badge json">String · JSON array</span></td><td>Override fallback cho banner/native nếu không có versioned key.</td></tr>
+          <tr><td><code>app_open_ad_places</code></td><td><span class="badge json">String · JSON array</span></td><td>Các vị trí app open.</td></tr>
+          <tr><td><code>app_open_ad_places_2</code></td><td><span class="badge json">String · JSON array</span></td><td>Override fallback cho app open.</td></tr>
+          <tr><td><code>rewarded_rewardedinter_inter_ad_places</code></td><td><span class="badge json">String · JSON array</span></td><td>Các vị trí interstitial, rewarded, rewarded interstitial và native interstitial.</td></tr>
+          <tr><td><code>rewarded_rewardedinter_inter_ad_places_2</code></td><td><span class="badge json">String · JSON array</span></td><td>Override fallback cho fullscreen ads.</td></tr>
+          <tr><td><code>ad_places_version_config</code></td><td><span class="badge json">String · JSON array</span></td><td>Map versionCode sang key ad places riêng.</td></tr>
+          <tr><td><code>ab_testing_ad_place_names</code></td><td><span class="badge json">String · JSON array</span></td><td>Danh sách các <code>place_name</code> hiện có được phép nhận cấu hình A/B override.</td></tr>
+          <tr><td><code>ad_place_ab_&lt;place_name&gt;</code></td><td><span class="badge dynamic">String · key động</span></td><td>JSON object ad place đầy đủ dùng để thay thế toàn bộ object gốc trong variant A/B.</td></tr>
+          <tr><td><code>interstitial_ad_config</code></td><td><span class="badge json">String · JSON object</span></td><td>Retry, interval, meaningful actions và giới hạn session cho interstitial.</td></tr>
+          <tr><td><code>rewarded_ad_config</code></td><td><span class="badge json">String · JSON object</span></td><td>Retry và wait-to-show cho rewarded video.</td></tr>
+          <tr><td><code>rewarded_interstitial_ad_config</code></td><td><span class="badge json">String · JSON object</span></td><td>Retry và wait-to-show cho rewarded interstitial. Defaults hiện tại chưa khai báo key này, code sẽ dùng default nội bộ.</td></tr>
+          <tr><td><code>app_open_ad_config</code></td><td><span class="badge json">String · JSON object</span></td><td>Interval, retry và mode reopen app.</td></tr>
+          <tr><td><code>native_ad_config</code></td><td><span class="badge json">String · JSON object</span></td><td>Retry, hide-on-error và TTL mặc định cho native.</td></tr>
+          <tr><td><code>banner_ad_config</code></td><td><span class="badge json">String · JSON object</span></td><td>Retry và hide-on-error cho banner.</td></tr>
+          <tr><td><code>request_consent_config</code></td><td><span class="badge json">String · JSON object</span></td><td>UMP consent và debug EEA/test device.</td></tr>
+          <tr><td><code>onboarding_config</code></td><td><span class="badge json">String · JSON object</span></td><td>Version UI onboarding và close/swipe behavior.</td></tr>
+          <tr><td><code>language_activity_config</code></td><td><span class="badge json">String · JSON object</span></td><td>Version UI language, thời gian loading LFO và trạng thái hiển thị Lottie hướng dẫn click group.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="ad-place">
+      <h2>Schema ad place chung</h2>
+      <div class="config-keys" data-config-key="banner_native_ad_places app_open_ad_places rewarded_rewardedinter_inter_ad_places">
+        <code>banner_native_ad_places</code><code>app_open_ad_places</code><code>rewarded_rewardedinter_inter_ad_places</code>
+      </div>
+      <p>Mỗi object trong các list ad place dùng các field chung sau. Nếu <code>ad_id</code> rỗng, <code>is_enable=false</code>, hoặc <code>ad_type</code> không hợp lệ thì place không được load.</p>
+      <table>
+        <thead><tr><th>Field</th><th>Kiểu</th><th>Áp dụng</th><th>Ý nghĩa</th></tr></thead>
+        <tbody>
+          <tr><td><code>place_name</code></td><td>String</td><td>Tất cả</td><td>Tên vị trí. Nên khai báo trong <code>AppAdPlaceName</code>. Riêng <code>native_config</code> lồng trong interstitial có thể dùng remote place name mới.</td></tr>
+          <tr><td><code>ad_id</code></td><td>String</td><td>Tất cả</td><td>AdMob ad unit id chính, thường là fallback cuối.</td></tr>
+          <tr><td><code>high_floor_ad_ids</code></td><td>Array string</td><td>Tất cả</td><td>Danh sách ad unit ưu tiên, load trước <code>ad_id</code> theo waterfall.</td></tr>
+          <tr><td><code>ad_type</code></td><td>String</td><td>Tất cả</td><td><span class="pill">banner</span><span class="pill">native</span><span class="pill">native_interstitial</span><span class="pill">interstitial</span><span class="pill">rewarded</span><span class="pill">rewarded_interstitial</span><span class="pill">app_open</span></td></tr>
+          <tr><td><code>is_enable</code></td><td>Boolean</td><td>Tất cả</td><td>Bật/tắt riêng vị trí quảng cáo.</td></tr>
+          <tr><td><code>is_tracking_click</code></td><td>Boolean</td><td>Tất cả</td><td>Bật tracking click.</td></tr>
+          <tr><td><code>is_tracking_show</code></td><td>Boolean</td><td>Tất cả</td><td>Bật tracking show/impression theo flow nội bộ.</td></tr>
+          <tr><td><code>is_auto_load_after_dismiss</code></td><td>Boolean</td><td>Fullscreen</td><td>Sau khi dismiss, tự load lại ad mới. Default code: <code>true</code>.</td></tr>
+          <tr><td><code>is_ignore_interval</code></td><td>Boolean</td><td>Interstitial</td><td>Ưu tiên bỏ qua interval, giới hạn session và meaningful actions ở place này.</td></tr>
+          <tr><td><code>is_tutorial_flow</code></td><td>Boolean</td><td>Tất cả</td><td>Place thuộc tutorial flow, chịu ảnh hưởng của <code>tutorial_config</code>.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Versioned ad places</h3>
+      <div class="config-keys" data-config-key="ad_places_version_config banner_native_ad_places_2 app_open_ad_places_2 rewarded_rewardedinter_inter_ad_places_2">
+        <code>ad_places_version_config</code><code>banner_native_ad_places_2</code><code>app_open_ad_places_2</code><code>rewarded_rewardedinter_inter_ad_places_2</code>
+      </div>
+      <p>Nếu cần thay danh sách place theo versionCode, khai báo <code>ad_places_version_config</code>. Với mỗi nhóm, app đọc key versioned trước; nếu list rỗng mới đọc <code>*_2</code>, sau đó fallback về key mặc định.</p>
+      <pre><code>[
+  {
+    "version_code": [12, 13],
+    "key": {
+      "banner_native": "banner_native_ad_places_v12",
+      "app_open": "app_open_ad_places_v12",
+      "reward_inter": "rewarded_rewardedinter_inter_ad_places_v12"
+    }
+  }
+]</code></pre>
+
+      <h3>Replace các key <code>*_2</code> từ app module</h3>
+      <div class="config-keys" data-config-key="banner_native_ad_places_2 app_open_ad_places_2 rewarded_rewardedinter_inter_ad_places_2">
+        <code>banner_native_ad_places_2</code><code>app_open_ad_places_2</code><code>rewarded_rewardedinter_inter_ad_places_2</code>
+      </div>
+      <p>Không cần sửa <code>ConfigParam.kt</code> trong core. Mở <code>app/src/main/java/com/codebasetemplate/required/firebase/AppAdPlacesRemoteConfigKeyProvider.kt</code> và thay giá trị của key cần dùng riêng cho app:</p>
+      <pre><code>class AppAdPlacesRemoteConfigKeyProvider @Inject constructor() :
+    AdPlacesRemoteConfigKeyProvider {
+    override val bannerNativeAdPlacesKey = "my_banner_native_ad_places"
+    override val appOpenAdPlacesKey = "my_app_open_ad_places"
+    override val rewardedRewardedInterInterAdPlacesKey =
+        "my_rewarded_inter_ad_places"
+}</code></pre>
+      <p>Provider của app đã được đăng ký vào Hilt trong <code>RequiredModule</code>. Khi tạo app module mới hoặc di chuyển implementation, giữ binding <code>@IntoSet</code> sau:</p>
+      <pre><code>@Provides
+@IntoSet
+@Singleton
+fun provideAdPlacesRemoteConfigKeyProvider(
+    provider: AppAdPlacesRemoteConfigKeyProvider,
+): AdPlacesRemoteConfigKeyProvider = provider</code></pre>
+      <div class="note">
+        <strong>Thứ tự resolve:</strong> key theo <code>ad_places_version_config</code> được đọc trước. Nếu không có dữ liệu hợp lệ, core đọc key <code>*_2</code> do app provider cung cấp, rồi mới fallback về <code>banner_native_ad_places</code>, <code>app_open_ad_places</code> hoặc <code>rewarded_rewardedinter_inter_ad_places</code>. App có thể chỉ override một property; các property còn lại tự dùng key mặc định của core.
+      </div>
+    </section>
+
+    <section id="ab-testing">
+      <h2>A/B testing theo ad place</h2>
+      <div class="config-keys" data-config-key="ab_testing_ad_place_names ad_place_ab_&lt;place_name&gt;">
+        <code>ab_testing_ad_place_names</code><code>ad_place_ab_&lt;place_name&gt;</code>
+      </div>
+      <p>Cơ chế A/B testing hoạt động như một lớp override đặt trên các list ad place hiện tại. Core resolve list gốc theo thứ tự versioned key, key <code>*_2</code> và key mặc định trước; sau đó mới áp dụng override. Việc replace diễn ra hoàn toàn trong <code>core:config</code>, vì vậy app tiếp tục dùng <code>getAdPlaceBy(...)</code> và AdsManager như cũ, không cần sửa implementation.</p>
+
+      <h3>1. Khai báo danh sách place được A/B test</h3>
+      <div class="config-keys" data-config-key="ab_testing_ad_place_names"><code>ab_testing_ad_place_names</code></div>
+      <p>Tạo parameter <code>ab_testing_ad_place_names</code> với kiểu String và giá trị là JSON array. Chỉ nên khai báo các <code>place_name</code> đã tồn tại trong một trong ba list ad place gốc.</p>
+      <pre><code>[
+  "anchored_bottom_home",
+  "fullscreen_test"
+]</code></pre>
+
+      <h3>2. Tạo parameter override cho từng place</h3>
+      <div class="config-keys" data-config-key="ad_place_ab_&lt;place_name&gt;"><code>ad_place_ab_&lt;place_name&gt;</code></div>
+      <p>Tên parameter tuân theo format <code>ad_place_ab_&lt;place_name&gt;</code>. Ví dụ với place <code>anchored_bottom_home</code>, parameter tương ứng là:</p>
+      <pre><code>ad_place_ab_anchored_bottom_home</code></pre>
+      <p>Giá trị control/default có thể để rỗng. Giá trị variant phải là một object ad place đầy đủ; tối thiểu phải có <code>place_name</code>, <code>ad_id</code>, <code>ad_type</code> và <code>is_enable</code>.</p>
+      <pre><code>{
+  "place_name": "anchored_bottom_home",
+  "ad_id": "ca-app-pub-xxx/yyy",
+  "ad_type": "native",
+  "native_template_size": "medium_cta_bottom",
+  "is_enable": true,
+  "is_tracking_click": true,
+  "background_color": "#FFFFFF",
+  "primary_text_color": "#1F2937",
+  "body_text_color": "#6B7280",
+  "background_cta": "#5E56F5"
+}</code></pre>
+
+      <div class="note">
+        <strong>Quan trọng:</strong> override thay thế toàn bộ object, không merge từng field. Mọi field không xuất hiện trong variant sẽ nhận default của mapper, không giữ giá trị từ object gốc. Vì vậy hãy copy object gốc rồi sửa các field cần test.
+      </div>
+
+      <h3>3. Thiết lập experiment trên Firebase</h3>
+      <ol>
+        <li>Giữ <code>ab_testing_ad_place_names</code> là parameter chung, không cần thay đổi giữa control và variant.</li>
+        <li>Chọn <code>ad_place_ab_&lt;place_name&gt;</code> làm parameter của experiment.</li>
+        <li>Control dùng chuỗi rỗng để app giữ nguyên object trong list gốc.</li>
+        <li>Variant dùng JSON object đầy đủ muốn thử nghiệm.</li>
+        <li>Publish Remote Config và chạy experiment theo phân bổ user của Firebase.</li>
+      </ol>
+
+      <h3>Quy tắc resolve và fallback</h3>
+      <ul>
+        <li>Danh sách tên được trim, loại phần tử rỗng và loại trùng.</li>
+        <li>Override chỉ áp dụng cho place đã có trong list gốc; không thể thêm place mới.</li>
+        <li><code>place_name</code> trong object override phải trùng chính xác với tên nằm trong danh sách.</li>
+        <li>Key không tồn tại, value rỗng, JSON lỗi hoặc thiếu field bắt buộc sẽ giữ nguyên object gốc.</li>
+        <li>Thứ tự và số lượng phần tử của list gốc không thay đổi.</li>
+      </ul>
+
+      <h3>Ví dụ kết quả</h3>
+      <table>
+        <thead><tr><th>Nhóm</th><th>Giá trị parameter override</th><th>Kết quả trong app</th></tr></thead>
+        <tbody>
+          <tr><td>Control</td><td>Chuỗi rỗng</td><td>Dùng nguyên object từ list ad place gốc.</td></tr>
+          <tr><td>Variant</td><td>JSON object đầy đủ, hợp lệ</td><td>Thay toàn bộ object gốc trước khi map sang <code>AdPlace</code>.</td></tr>
+          <tr><td>Fallback</td><td>JSON sai, thiếu field hoặc sai <code>place_name</code></td><td>Bỏ qua override và dùng object gốc.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="native">
+      <h2>Native ads</h2>
+      <div class="config-keys" data-config-key="banner_native_ad_places rewarded_rewardedinter_inter_ad_places">
+        <code>banner_native_ad_places</code><code>rewarded_rewardedinter_inter_ad_places</code>
+      </div>
+      <p>Native có thể nằm trong <code>banner_native_ad_places</code> hoặc trong <code>rewarded_rewardedinter_inter_ad_places</code> khi dùng native interstitial. Field quan trọng nhất là <code>native_template_size</code>.</p>
+      <table>
+        <thead><tr><th>Field</th><th>Kiểu</th><th>Ý nghĩa</th></tr></thead>
+        <tbody>
+          <tr><td><code>native_template_size</code></td><td>String</td><td>Template UI. Xem gallery bên dưới.</td></tr>
+          <tr><td><code>background_color</code></td><td>String</td><td>Màu nền card/native. Có thể dùng hex hoặc chuỗi gradient theo pattern hiện có.</td></tr>
+          <tr><td><code>background_full_color</code></td><td>String</td><td>Màu nền full screen phía sau media/native.</td></tr>
+          <tr><td><code>primary_text_color</code></td><td>String</td><td>Màu headline.</td></tr>
+          <tr><td><code>primary_text_size_dp</code></td><td>Int</td><td>Số nguyên từ 1 đến 35 ánh xạ tới resource responsive <code>@dimen/_Ndp</code> cho headline. Bỏ field hoặc dùng giá trị ngoài khoảng để giữ kích thước trong layout.</td></tr>
+          <tr><td><code>body_text_color</code></td><td>String</td><td>Màu body/description.</td></tr>
+          <tr><td><code>body_text_size_dp</code></td><td>Int</td><td>Số nguyên từ 1 đến 35 ánh xạ tới resource responsive <code>@dimen/_Ndp</code> cho body/description. Bỏ field hoặc dùng giá trị ngoài khoảng để giữ kích thước trong layout.</td></tr>
+          <tr><td><code>background_cta</code></td><td>String</td><td>Màu nền nút CTA. Có thể dùng 1 màu hoặc gradient dạng <code>#F59E0B,#EF4444</code>.</td></tr>
+          <tr><td><code>cta_text_color</code></td><td>String</td><td>Màu text CTA.</td></tr>
+          <tr><td><code>cta_text_size_dp</code></td><td>Int</td><td>Số nguyên từ 1 đến 35 ánh xạ tới resource responsive <code>@dimen/_Ndp</code> cho CTA. Bỏ field hoặc dùng giá trị ngoài khoảng để giữ kích thước trong layout.</td></tr>
+          <tr><td><code>cta_border_color</code></td><td>String</td><td>Màu viền CTA.</td></tr>
+          <tr><td><code>cta_radius_dp</code></td><td>Int</td><td>Bo góc CTA theo dp.</td></tr>
+          <tr><td><code>border_color</code></td><td>String</td><td>Màu viền card/native.</td></tr>
+          <tr><td><code>background_radius</code></td><td>Int</td><td>Bo góc nền/card native.</td></tr>
+          <tr><td><code>media_background_color</code></td><td>String</td><td>Màu nền media view.</td></tr>
+          <tr><td><code>background_color_ads_notify_view</code></td><td>String</td><td>Màu nền nhãn "Ad".</td></tr>
+          <tr><td><code>text_color_ads_notify_view</code></td><td>String</td><td>Màu chữ nhãn "Ad".</td></tr>
+          <tr><td><code>expired_time_second</code></td><td>Int</td><td>TTL riêng cho native holder. Nếu thiếu dùng <code>native_ad_config.expired_time_second</code>.</td></tr>
+          <tr><td><code>refresh_time_second</code></td><td>Int</td><td>Reload interval cho native; <code>&lt;=0</code> là không refresh.</td></tr>
+          <tr><td><code>is_enable_fullscreen_immersive</code></td><td>Boolean</td><td>Với full native, bật mode immersive/transparent theo logic template.</td></tr>
+          <tr><td><code>count_down_timer</code></td><td>Int</td><td>Thời gian countdown cho native interstitial/fullscreen close.</td></tr>
+          <tr><td><code>close_step_count</code></td><td>Int</td><td><code>1</code> close một bước; <code>2</code> next rồi close, dùng cho native interstitial v3.</td></tr>
+          <tr><td><code>step_1_count_down_timer</code></td><td>Int</td><td>Countdown bước đầu khi <code>close_step_count=2</code>.</td></tr>
+          <tr><td><code>step_2_count_down_timer</code></td><td>Int</td><td>Countdown bước close khi <code>close_step_count=2</code>.</td></tr>
+          <tr><td><code>hide_text_skip_count_down</code></td><td>Boolean</td><td>Ẩn text skip countdown.</td></tr>
+          <tr><td><code>hide_text_count_down</code></td><td>Boolean</td><td>Ẩn text countdown.</td></tr>
+          <tr><td><code>hide_progress_count_down</code></td><td>Boolean</td><td>Ẩn progress countdown.</td></tr>
+          <tr><td><code>progress_bar_tint</code></td><td>String</td><td>Màu progress countdown.</td></tr>
+          <tr><td><code>is_native_collapsible</code></td><td>Boolean</td><td>Bật host collapsible generic cho native template thông thường. Default <code>false</code>. Không dùng <code>is_collapsible</code> của banner.</td></tr>
+          <tr><td><code>native_expand_template</code></td><td>String</td><td>Giao diện popup mở rộng: <code>native_expand_v1</code> hoặc <code>native_expand_v2</code>. Thiếu hoặc sai giá trị sẽ fallback về V1.</td></tr>
+          <tr><td><code>control_close_position</code></td><td>String</td><td><code>left</code> hoặc <code>right</code>, vị trí nút next/close ở native interstitial v3 và collapsible.</td></tr>
+          <tr><td><code>collapsible_expand_cooldown_second</code></td><td>Int</td><td>Thời gian cooldown mở rộng lại của template collapsible.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Native collapsible generic</h3>
+      <div class="config-keys field"><code>is_native_collapsible</code><code>native_expand_template</code></div>
+      <p><code>is_native_collapsible=true</code> giữ <code>native_template_size</code> làm giao diện thu gọn và dùng một popup riêng cho trạng thái mở rộng. <code>native_expand_template</code> chỉ có hiệu lực khi native collapsible được bật.</p>
+      <table>
+        <thead><tr><th><code>native_template_size</code></th><th><code>is_native_collapsible</code></th><th><code>native_expand_template</code></th><th>Kết quả</th></tr></thead>
+        <tbody>
+          <tr><td>Template thông thường</td><td><code>false</code> hoặc thiếu</td><td>Bất kỳ</td><td>Chỉ hiển thị native template thông thường.</td></tr>
+          <tr><td>Template thông thường</td><td><code>true</code></td><td><code>native_expand_v1</code></td><td>Popup dùng <code>NativeExpandView</code> V1.</td></tr>
+          <tr><td>Template thông thường</td><td><code>true</code></td><td><code>native_expand_v2</code></td><td>Popup dùng <code>NativeExpandViewV2</code>.</td></tr>
+          <tr><td>Template thông thường</td><td><code>true</code></td><td>Thiếu hoặc không hợp lệ</td><td>Fallback về <code>NativeExpandView</code> V1.</td></tr>
+        </tbody>
+      </table>
+      <pre><code>{
+  "place_name": "anchored_bottom_home",
+  "ad_id": "ca-app-pub-xxxxxxxxxxxxxxxx/yyyyyyyyyy",
+  "ad_type": "native",
+  "native_template_size": "small_cta_bottom",
+  "is_native_collapsible": true,
+  "native_expand_template": "native_expand_v2",
+  "control_close_position": "left",
+  "collapsible_expand_cooldown_second": 10,
+  "is_enable": true
+}</code></pre>
+      <div class="note">
+        <strong>Migration:</strong> <code>medium_collapsible_cta_bottom</code> và <code>medium_collapsible_banner</code> đã bị loại bỏ. Hãy đổi sang template thông thường kết hợp với <code>is_native_collapsible=true</code>.
+      </div>
+
+      <h3>Native picture-in-picture config</h3>
+      <div class="config-keys field"><code>native_template_size</code><code>pip_anchor_mode</code><code>pip_layout_format</code><code>pip_margin_dp</code><code>pip_top_margin_dp</code></div>
+      <p>Native PIP dùng <code>native_template_size=native_pip</code>, kích thước UI 180dp × 180dp. Khi user đang kéo, margin PIP không giới hạn vùng kéo; margin chỉ được áp dụng khi hiển thị ban đầu hoặc khi thả tay để snap/validate lại vị trí.</p>
+      <table>
+        <thead><tr><th>Field</th><th>Kiểu</th><th>Ý nghĩa</th></tr></thead>
+        <tbody>
+          <tr><td><code>pip_anchor_mode</code></td><td>String</td><td><code>flexible</code> snap về cạnh trái/phải; <code>fixed</code> snap về góc trên/dưới gần vị trí thả tay.</td></tr>
+          <tr><td><code>pip_layout_format</code></td><td>String</td><td><code>compact</code> hoặc <code>media_card</code>. Nếu thiếu hoặc không hợp lệ, dùng <code>NativePictureInPicture.Config.layoutFormat</code> do bên gọi cung cấp (mặc định <code>compact</code>).</td></tr>
+          <tr><td><code>pip_margin_dp</code></td><td>Float</td><td>Margin start/end/bottom theo dp khi show và khi validate sau khi thả tay. Nếu thiếu, code default <code>20</code>.</td></tr>
+          <tr><td><code>pip_top_margin_dp</code></td><td>Float</td><td>Margin top theo dp khi show và khi validate sau khi thả tay. Nếu thiếu, code default <code>20</code>.</td></tr>
+        </tbody>
+      </table>
+      <pre><code>{
+  "place_name": "anchored_native_pip_home",
+  "ad_id": "ca-app-pub-xxxxxxxxxxxxxxxx/yyyyyyyyyy",
+  "ad_type": "native",
+  "native_template_size": "native_pip",
+  "is_enable": true,
+  "is_tracking_click": true,
+  "background_color": "#FFFFFF",
+  "primary_text_color": "#1F2937",
+  "primary_text_size_dp": 16,
+  "body_text_color": "#111827",
+  "body_text_size_dp": 14,
+  "cta_text_color": "#FFFFFF",
+  "cta_text_size_dp": 14,
+  "background_cta": "#FFC21A,#FF7A00",
+  "border_color": "#000000",
+  "expired_time_second": 60,
+  "count_down_timer": 3,
+  "pip_anchor_mode": "flexible",
+  "pip_margin_dp": 20,
+  "pip_top_margin_dp": 20
+}</code></pre>
+
+      <h3>Native global config</h3>
+      <div class="config-keys" data-config-key="native_ad_config"><code>native_ad_config</code></div>
+      <pre><code>{
+  "is_enable_retry": true,
+  "max_retry_count": 5,
+  "is_hide_when_error": true,
+  "expired_time_second": 60,
+  "retry_interval_second_list": [1, 2, 3]
+}</code></pre>
+
+    </section>
+
+    <section id="banner">
+      <h2>Banner ads</h2>
+      <div class="config-keys" data-config-key="banner_native_ad_places"><code>banner_native_ad_places</code></div>
+      <table>
+        <thead><tr><th>Field</th><th>Giá trị</th><th>Ý nghĩa</th></tr></thead>
+        <tbody>
+          <tr><td><code>ad_type</code></td><td><code>banner</code></td><td>Chọn BannerAdPlace.</td></tr>
+          <tr><td><code>banner_size</code></td><td><code>anchored</code>, <code>anchored_large</code>, <code>inline</code>, <code>standard_medium</code>, <code>standard_large</code></td><td>Map sang AdMob adaptive/standard size.</td></tr>
+          <tr><td><code>is_collapsible</code></td><td>Boolean</td><td>Bật collapsible banner request.</td></tr>
+          <tr><td><code>auto_reload_collapsible</code></td><td>Boolean</td><td>Nếu <code>false</code>, collapsible đã load cùng identifier sẽ không auto reload lại ngay.</td></tr>
+        </tbody>
+      </table>
+      <pre><code>{
+  "place_name": "anchored_banner_test",
+  "ad_id": "ca-app-pub-xxxxxxxxxxxxxxxx/yyyyyyyyyy",
+  "ad_type": "banner",
+  "banner_size": "anchored",
+  "is_collapsible": true,
+  "auto_reload_collapsible": false,
+  "is_enable": true,
+  "is_tracking_click": true
+}</code></pre>
+
+      <h3>Banner global config</h3>
+      <div class="config-keys" data-config-key="banner_ad_config"><code>banner_ad_config</code></div>
+      <pre><code>{
+  "is_enable_retry": true,
+  "max_retry_count": 5,
+  "is_hide_when_error": true,
+  "retry_interval_second_list": [1, 2, 3]
+}</code></pre>
+    </section>
+
+    <section id="fullscreen">
+      <h2>Interstitial, Native Interstitial, Rewarded, Rewarded Interstitial</h2>
+      <div class="config-keys" data-config-key="rewarded_rewardedinter_inter_ad_places"><code>rewarded_rewardedinter_inter_ad_places</code></div>
+      <p>Các loại fullscreen dùng chung list <code>rewarded_rewardedinter_inter_ad_places</code>. Chọn type bằng <code>ad_type</code>.</p>
+      <table>
+        <thead><tr><th>ad_type</th><th>Loại ad</th><th>Config global</th></tr></thead>
+        <tbody>
+          <tr><td><code>interstitial</code></td><td>Interstitial</td><td><code>interstitial_ad_config</code></td></tr>
+          <tr><td><code>rewarded</code></td><td>Rewarded video</td><td><code>rewarded_ad_config</code></td></tr>
+          <tr><td><code>rewarded_interstitial</code></td><td>Rewarded interstitial</td><td><code>rewarded_interstitial_ad_config</code></td></tr>
+          <tr><td><code>native_interstitial</code></td><td>Native toàn màn hình, dùng API load/show fullscreen</td><td><code>native_ad_config</code> cho TTL mặc định; <code>interstitial_ad_config</code> cho chờ load và giới hạn show; native place fields cho giao diện</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Native interstitial độc lập</h3>
+      <p>Khai báo trong danh sách fullscreen và dùng <strong>native ad unit ID</strong>. Đăng ký preload qua <code>providerInterAdPlaceName()</code> hoặc gọi <code>loadInterstitialAds()</code>, sau đó gọi <code>showInterAd()</code>. API trực tiếp tương ứng là <code>loadFullscreenAd()</code> và <code>showAd()</code>.</p>
+      <pre><code>{
+  "place_name": "fullscreen_native_interstitial",
+  "ad_id": "ca-app-pub-3940256099942544/2247696110",
+  "ad_type": "native_interstitial",
+  "native_template_size": "full_interstitial_v3",
+  "is_enable": true,
+  "is_auto_load_after_dismiss": true,
+  "background_full_color": "#FFFFFF",
+  "control_close_position": "left",
+  "close_step_count": 1,
+  "count_down_timer": 5
+}</code></pre>
+      <div class="note">
+        <strong>Mỗi instance NativeAd chỉ hiển thị một lần.</strong> Khi vừa show, manager phát <code>AdSucceedToShow</code> và chưa reload. Khi đóng, ad được <code>destroy()</code>, xóa cache, cập nhật giới hạn interstitial và phát <code>AdDismissed</code>. Nếu <code>is_auto_load_after_dismiss=true</code> (mặc định), manager bắt đầu load ad mới rồi phát <code>AdCompleted</code>, không chờ reload hoàn tất. Nếu tắt auto reload, cần chủ động load lại hoặc bật chờ load cho lượt show sau.
+      </div>
+      <p>Load thành công/thất bại đi qua <code>adFullScreenFlow</code>. Nếu chưa có ad và không bật chờ load, show trả completed với <code>isShown=false</code>. Có thể bật chờ bằng <code>showAd(isWaitLoadToShow=true)</code> hoặc <code>interstitial_ad_config.is_wait_load_to_show=true</code>; mỗi request có timeout 30 giây. Native hết TTL không được show.</p>
+      <p>Config dev hiện dùng type này cho <code>action_app_open</code> từ lần mở app thứ hai, với V3 và countdown 5 giây. <code>splash_screen_config.ad_type</code> vẫn là <code>interstitial</code> để chọn nhánh fullscreen. Placement chỉ dùng ở splash có thể tắt <code>is_auto_load_after_dismiss</code> để tránh load thêm khi rời splash.</p>
+      <p>Native fullscreen cũ dùng <code>ad_type=native</code> vẫn được hỗ trợ. Khi chuyển sang type mới, chuyển preload từ danh sách banner/native sang danh sách interstitial. Luồng native nối tiếp sau interstitial vẫn giữ <code>native_config.ad_type=native</code>. Xem <a href="../native-interstitial-config.md">hướng dẫn Native interstitial</a> để có ví dụ Kotlin, vòng đời và lệnh test.</p>
+
+      <h3>Interstitial place fields</h3>
+      <div class="config-keys field"><code>plus_interval</code><code>is_ignore_interval</code><code>is_show_native_after</code><code>native_config</code></div>
+      <table>
+        <thead><tr><th>Field</th><th>Kiểu</th><th>Ý nghĩa</th></tr></thead>
+        <tbody>
+          <tr><td><code>plus_interval</code></td><td>Int</td><td>Cộng thêm vào <code>interstitial_ad_config.time_interval</code> riêng cho place.</td></tr>
+          <tr><td><code>is_ignore_interval</code></td><td>Boolean</td><td>Ưu tiên cao nhất: bỏ qua interval, giới hạn session và meaningful actions khi kiểm tra show.</td></tr>
+          <tr><td><code>is_show_native_after</code></td><td>Boolean</td><td>Sau khi interstitial dismiss, show thêm native interstitial từ <code>native_config</code>.</td></tr>
+          <tr><td><code>native_after_load_strategy</code></td><td>String</td><td><code>with_interstitial</code> load native cùng lúc interstitial; <code>on_interstitial_impression</code> load native khi interstitial impression.</td></tr>
+          <tr><td><code>native_config</code></td><td>Object</td><td>NativeAdPlace lồng, thường dùng <code>native_template_size=full_interstitial_v3</code>.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Interstitial global config</h3>
+      <div class="config-keys" data-config-key="interstitial_ad_config"><code>interstitial_ad_config</code></div>
+      <pre><code>{
+  "is_wait_load_to_show": false,
+  "ads_per_session": 99,
+  "time_per_session": 600,
+  "time_interval": 3,
+  "time_interval_after_show_open_ad": 3,
+  "meaningful_actions_between_interstitial": 3,
+  "is_enable_retry": true,
+  "max_retry_count": 5,
+  "retry_interval_second_list": [1, 2, 3]
+}</code></pre>
+      <p><code>meaningful_actions_between_interstitial</code> là số lần yêu cầu show interstitial tối thiểu sau khi một interstitial đã dismiss. Ví dụ giá trị <code>3</code>: hai yêu cầu tiếp theo bị bỏ qua và yêu cầu thứ ba mới đủ điều kiện; interstitial đầu tiên không bị chặn. Giá trị <code>0</code> hoặc âm sẽ tắt giới hạn này. Khi bật, cả interval và ngưỡng meaningful actions đều phải hợp lệ. Place có <code>is_ignore_interval=true</code> luôn được ưu tiên và bỏ qua các giới hạn trên.</p>
+
+      <h3>Rewarded global config</h3>
+      <div class="config-keys" data-config-key="rewarded_ad_config"><code>rewarded_ad_config</code></div>
+      <pre><code>{
+  "is_wait_load_to_show": false,
+  "is_enable_retry": true,
+  "max_retry_count": 5,
+  "max_retry_on_context": 2,
+  "time_wait_retry_on_context": 5,
+  "retry_interval_second_list": [1, 2, 3]
+}</code></pre>
+
+      <h3>Rewarded interstitial global config</h3>
+      <div class="config-keys" data-config-key="rewarded_interstitial_ad_config"><code>rewarded_interstitial_ad_config</code></div>
+      <pre><code>{
+  "is_wait_load_to_show": false,
+  "is_enable_retry": true,
+  "max_retry_count": 5,
+  "retry_interval_second_list": [1, 2, 3]
+}</code></pre>
+
+      <h3>Ví dụ interstitial có native sau dismiss</h3>
+      <div class="config-keys" data-config-key="rewarded_rewardedinter_inter_ad_places"><code>rewarded_rewardedinter_inter_ad_places</code></div>
+      <pre><code>{
+  "place_name": "fullscreen_test",
+  "ad_id": "ca-app-pub-xxxxxxxxxxxxxxxx/inter",
+  "ad_type": "interstitial",
+  "is_enable": true,
+  "is_show_native_after": true,
+  "native_after_load_strategy": "on_interstitial_impression",
+  "native_config": {
+    "place_name": "fullscreen_test_native",
+    "ad_id": "ca-app-pub-xxxxxxxxxxxxxxxx/native",
+    "ad_type": "native",
+    "native_template_size": "full_interstitial_v3",
+    "is_enable": true,
+    "background_color": "#CD121212",
+    "background_full_color": "#FFFFFF",
+    "primary_text_color": "#1F2937",
+    "body_text_color": "#6B7280",
+    "background_cta": "#22C55E",
+    "control_close_position": "left",
+    "count_down_timer": 5,
+    "close_step_count": 2,
+    "step_1_count_down_timer": 2,
+    "step_2_count_down_timer": 2
+  }
+}</code></pre>
+    </section>
+
+    <section id="app-open">
+      <h2>Open app ads</h2>
+      <div class="config-keys" data-config-key="app_open_ad_places"><code>app_open_ad_places</code></div>
+      <p>Open app place nằm trong <code>app_open_ad_places</code>, type là <code>app_open</code>. Project đang dùng các place phổ biến: <code>open_app_first_open</code>, <code>open_app</code>, <code>reopen_app</code>.</p>
+      <table>
+        <thead><tr><th>Field</th><th>Kiểu</th><th>Ý nghĩa</th></tr></thead>
+        <tbody>
+          <tr><td><code>limit_show</code></td><td>Int</td><td>Giới hạn show của place. Nếu thiếu, code default <code>10000</code>.</td></tr>
+          <tr><td><code>ad_type</code></td><td>String</td><td>Luôn là <code>app_open</code>.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>App open global config</h3>
+      <div class="config-keys" data-config-key="app_open_ad_config"><code>app_open_ad_config</code></div>
+      <table>
+        <thead><tr><th>Field</th><th>Ý nghĩa</th></tr></thead>
+        <tbody>
+          <tr><td><code>time_interval</code></td><td>Khoảng cách tối thiểu giữa app open với interstitial/app open gần nhất.</td></tr>
+          <tr><td><code>reopen_mode</code></td><td><code>app_open_ad</code> show AdMob AppOpen; <code>custom_activity</code> chạy custom reopen action.</td></tr>
+          <tr><td><code>time_millis_delay_before_show</code></td><td>Delay trước khi show reopen ad sau khi app foreground.</td></tr>
+          <tr><td><code>is_enable_retry</code>, <code>max_retry_count</code>, <code>retry_interval_second_list</code></td><td>Retry load app open.</td></tr>
+        </tbody>
+      </table>
+      <pre><code>{
+  "time_interval": 3,
+  "reopen_mode": "app_open_ad",
+  "time_millis_delay_before_show": 200,
+  "is_enable_retry": true,
+  "max_retry_count": 5,
+  "retry_interval_second_list": [1, 2, 3]
+}</code></pre>
+    </section>
+
+    <section id="other">
+      <p class="section-kicker">App-level config</p>
+      <h2>Config khác</h2>
+
+      <h3>iap_config</h3>
+      <div class="config-keys" data-config-key="iap_config"><code>iap_config</code></div>
+      <p>Nhóm IAP có liên quan trực tiếp đến ads vì user premium thường đi qua flow loại bỏ quảng cáo. Config được đọc khi app gọi <code>getIapConfig()</code>; nếu JSON thiếu hoặc lỗi, repository dùng default nội bộ.</p>
+      <table>
+        <thead><tr><th>Field</th><th>Kiểu</th><th>Default code</th><th>Ý nghĩa</th></tr></thead>
+        <tbody>
+          <tr><td><code>is_show_in_app_purchase_on_start</code></td><td>Boolean</td><td><code>false</code></td><td>Show màn IAP khi bắt đầu flow.</td></tr>
+          <tr><td><code>is_show_in_app_purchase_first_open</code></td><td>Boolean</td><td><code>true</code></td><td>Cho phép show IAP ở lần mở app đầu tiên.</td></tr>
+          <tr><td><code>is_show_iap_before_request_permission</code></td><td>Boolean</td><td><code>true</code></td><td>Đặt IAP trước bước xin permission trong start flow.</td></tr>
+          <tr><td><code>is_enable_iap_v2</code></td><td>Boolean</td><td><code>true</code></td><td>Bật flow/giao diện IAP v2.</td></tr>
+          <tr><td><code>time_wait_to_show_close_icon</code></td><td>Long (ms)</td><td><code>1500</code></td><td>Delay trước khi hiện nút đóng IAP.</td></tr>
+          <tr><td><code>upgrade_premium_disable_by_country</code></td><td>Array string</td><td><code>[]</code></td><td>Mã quốc gia không hiển thị luồng nâng cấp premium.</td></tr>
+        </tbody>
+      </table>
+      <pre><code>{
+  "is_show_in_app_purchase_on_start": false,
+  "is_show_in_app_purchase_first_open": true,
+  "is_show_iap_before_request_permission": true,
+  "is_enable_iap_v2": true,
+  "time_wait_to_show_close_icon": 1500,
+  "upgrade_premium_disable_by_country": []
+}</code></pre>
+
+      <h3>application_config</h3>
+      <div class="config-keys" data-config-key="application_config"><code>application_config</code></div>
+      <table>
+        <thead><tr><th>Field</th><th>Ý nghĩa</th></tr></thead>
+        <tbody>
+          <tr><td><code>is_hide_navigation_bar</code></td><td>Ẩn navigation bar khi app/dialog fullscreen cần immersive.</td></tr>
+          <tr><td><code>is_enable_ads</code></td><td>Bật/tắt toàn bộ quảng cáo.</td></tr>
+          <tr><td><code>is_preload_banner_native_exit</code></td><td>Preload quảng cáo dùng cho dialog exit.</td></tr>
+          <tr><td><code>is_always_preload_banner_native_ads_when_start</code></td><td>Preload banner/native khi vào app.</td></tr>
+          <tr><td><code>is_hide_native_banner_when_network_error</code></td><td>Ẩn native/banner container khi network error.</td></tr>
+          <tr><td><code>is_always_show_intro_and_language_screen</code></td><td>Luôn show language + onboarding.</td></tr>
+          <tr><td><code>is_always_show_intro_and_language_screen_with_interval</code></td><td>Luôn show language + onboarding theo chu kỳ ngày.</td></tr>
+          <tr><td><code>interval_day_always_show_intro_and_language</code></td><td>Số ngày cho chu kỳ show lại intro/language.</td></tr>
+          <tr><td><code>is_enable_introduction_screen</code></td><td>Bật/tắt onboarding.</td></tr>
+          <tr><td><code>is_enable_change_language_screen</code></td><td>Bật/tắt màn chọn ngôn ngữ.</td></tr>
+          <tr><td><code>is_enable_app_shortcut</code></td><td>Bật shortcut.</td></tr>
+          <tr><td><code>is_enable_app_shortcut_uninstall</code></td><td>Bật shortcut uninstall.</td></tr>
+          <tr><td><code>is_enable_open_app_ads_from_uninstall_shortcut</code></td><td>Cho phép open app ads khi mở từ uninstall shortcut.</td></tr>
+          <tr><td><code>is_enable_open_app_ads_from_shortcut</code></td><td>Cho phép open app ads khi mở từ shortcut thường.</td></tr>
+          <tr><td><code>intro_data</code>, <code>intro_data_v2</code>, <code>intro_data_v3</code></td><td>Mảng trạng thái từng page onboarding: <code>0</code> không ads, <code>1</code> native/banner, <code>2</code> full native.</td></tr>
+          <tr><td><code>intro_action_show_type</code></td><td>Kiểu show action intro, code default <code>1</code>.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Country và test-ad protection</h3>
+      <div class="config-keys" data-config-key="ads_disabled_by_country ad_places_disable_when_detect_test_ad is_turn_on_ad_places_disabled_when_detect_test_ad">
+        <code>ads_disabled_by_country</code><code>ad_places_disable_when_detect_test_ad</code><code>is_turn_on_ad_places_disabled_when_detect_test_ad</code>
+      </div>
+      <table>
+        <thead><tr><th>Key</th><th>Kiểu trên Console</th><th>Giá trị mẫu</th><th>Ý nghĩa</th></tr></thead>
+        <tbody>
+          <tr><td><code>ads_disabled_by_country</code></td><td>String · JSON array</td><td><code>["US", "VN"]</code></td><td>Tắt toàn bộ ads với các country code trong danh sách.</td></tr>
+          <tr><td><code>ad_places_disable_when_detect_test_ad</code></td><td>String · JSON array</td><td><code>["anchored_bottom_home"]</code></td><td>Các <code>place_name</code> bị vô hiệu hóa khi SDK phát hiện test ad.</td></tr>
+          <tr><td><code>is_turn_on_ad_places_disabled_when_detect_test_ad</code></td><td>Boolean</td><td><code>true</code></td><td>Công tắc bật logic test-ad protection cho danh sách trên.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>splash_screen_config</h3>
+      <div class="config-keys" data-config-key="splash_screen_config"><code>splash_screen_config</code></div>
+      <table>
+        <thead><tr><th>Field</th><th>Ý nghĩa</th></tr></thead>
+        <tbody>
+          <tr><td><code>max_time_to_wait_app_open_ad</code></td><td>Thời gian tối đa chờ app open trên splash.</td></tr>
+          <tr><td><code>time_skip_app_open_ad_when_not_available</code></td><td>Thời gian skip khi app open chưa có sẵn.</td></tr>
+          <tr><td><code>ad_type_first_open</code></td><td><code>interstitial</code> hoặc <code>app_open</code> cho lần mở đầu tiên.</td></tr>
+          <tr><td><code>ad_type</code></td><td><code>interstitial</code> hoặc <code>app_open</code> từ lần mở thứ hai.</td></tr>
+          <tr><td><code>min_time_wait_progress_before_show_ad</code></td><td>Thời gian progress tối thiểu trước khi show ad.</td></tr>
+          <tr><td><code>is_enable_retry</code>, <code>max_retry_count</code>, <code>retry_fixed_delay</code></td><td>Retry load splash ad.</td></tr>
+          <tr><td><code>is_load_before_eu_consent</code></td><td>Cho phép load trước khi hoàn tất EU consent.</td></tr>
+          <tr><td><code>is_enable_first_open</code></td><td>Boolean, tùy chọn. Ghi đè <code>is_enable</code> của <code>action_app_open_first_open</code> và <code>open_app_first_open</code>.</td></tr>
+          <tr><td><code>is_enable_open</code></td><td>Boolean, tùy chọn. Ghi đè <code>is_enable</code> của <code>action_app_open</code> và <code>open_app</code>.</td></tr>
+        </tbody>
+      </table>
+      <p>Hai flag <code>is_enable_first_open</code>, <code>is_enable_open</code> ưu tiên cao hơn <code>is_enable</code> trong <code>ad_places</code>, kể cả place đã bị A/B override: <code>true</code> bật, <code>false</code> tắt các place tương ứng. Bỏ trống key thì giữ nguyên <code>is_enable</code> của từng place. Flag không vượt qua các điều kiện khác như thiếu <code>ad_id</code>, tắt ads toàn app hoặc chặn theo quốc gia.</p>
+      <pre><code>{
+  "ad_type_first_open": "interstitial",
+  "ad_type": "interstitial",
+  "is_enable_first_open": false,
+  "is_enable_open": true
+}</code></pre>
+
+      <h3>prevent_ad_click_config</h3>
+      <div class="config-keys" data-config-key="prevent_ad_click_config"><code>prevent_ad_click_config</code></div>
+      <pre><code>{
+  "max_ad_click_per_session": 6,
+  "time_per_session": 120,
+  "time_disable_ads_when_reached_max_ad_click": 20
+}</code></pre>
+
+      <h3>tutorial_config</h3>
+      <div class="config-keys" data-config-key="tutorial_config"><code>tutorial_config</code></div>
+      <p>Áp dụng cho place có <code>is_tutorial_flow=true</code>. <code>enable_ad_1=false</code> loại <code>high_floor_ad_ids</code>; <code>enable_ad_2=false</code> loại <code>ad_id</code> fallback; <code>enable_all_ads=false</code> tắt nhóm tutorial theo mapper config.</p>
+      <pre><code>{
+  "enable_all_ads": true,
+  "enable_ad_1": true,
+  "enable_ad_2": true
+}</code></pre>
+
+      <h3>request_consent_config</h3>
+      <div class="config-keys" data-config-key="request_consent_config"><code>request_consent_config</code></div>
+      <pre><code>{
+  "is_enable": true,
+  "debug_is_eea": true,
+  "debug_list_test_device_hashed_id": [
+    "460E79ECA70EF328A2F505FFB68470B9"
+  ]
+}</code></pre>
+
+      <h3>onboarding_config và language_activity_config</h3>
+      <div class="config-keys" data-config-key="onboarding_config language_activity_config"><code>onboarding_config</code><code>language_activity_config</code></div>
+      <pre><code>{
+  "version": 3,
+  "position_next": "top",
+  "is_show_close": true,
+  "is_show_swipe": false,
+  "delay_show_close_swipe_seconds": 1
+}</code></pre>
+      <pre><code>{
+  "version": 2,
+  "time_show_loading_lfo": 3,
+  "is_show_click_guide": true
+}</code></pre>
+      <table>
+        <thead><tr><th>Field</th><th>Kiểu / mặc định</th><th>Ý nghĩa</th></tr></thead>
+        <tbody>
+          <tr><td><code>version</code></td><td>Integer · <code>2</code></td><td>Chọn phiên bản giao diện Language. Giá trị <code>2</code> sử dụng flow Language V2.</td></tr>
+          <tr><td><code>time_show_loading_lfo</code></td><td>Integer · <code>3</code></td><td>Số giây hiển thị trạng thái loading của Language flow.</td></tr>
+          <tr><td><code>is_show_click_guide</code></td><td>Boolean · <code>true</code></td><td><code>true</code> hiển thị Lottie <code>click.json</code> trên group thứ 3 của <code>LanguageActivityV21</code>; <code>false</code> ẩn hướng dẫn. Nếu thiếu field, app mặc định bật.</td></tr>
+        </tbody>
+      </table>
+      <p>Quy trình đầy đủ cho Language, bao gồm resource override, navigation và bảng <code>place_name</code> V1/V2: <a href="../startflow-language-ui-customization.html"><code>docs/startflow-language-ui-customization.html</code></a>.</p>
+    </section>
+
+    <section id="onboarding-ui">
+      <h2>Custom UI Onboarding flow</h2>
+      <div class="config-keys" data-config-key="onboarding_config"><code>onboarding_config</code></div>
+      <p><code>core:startflow</code> giữ logic điều hướng, quảng cáo và tracking. App custom nội dung/giao diện qua các API mở rộng, không cần copy layout hoặc sửa code trong module core.</p>
+
+      <table>
+        <thead><tr><th>API</th><th>Vai trò</th><th>Lưu ý</th></tr></thead>
+        <tbody>
+          <tr><td><code>OnBoardingContentProvider</code></td><td>Cung cấp số trang, ảnh, title và subtitle.</td><td>Chỉ nên đăng ký một provider; nếu không có sẽ dùng nội dung mặc định.</td></tr>
+          <tr><td><code>OnBoardingV1/V2/V3UiCustomizer</code></td><td>Đổi branding bằng state và UiSpec typed.</td><td>Không phụ thuộc View Binding của core; chạy theo priority.</td></tr>
+          <tr><td><code>OnBoardingV1/V2/V3PageRenderer</code></td><td>Thay toàn bộ UI một page.</td><td>Core vẫn giữ navigation, tracking và ad loading.</td></tr>
+          <tr><td><code>OnBoardingUiCustomizer</code></td><td>API View Binding cũ.</td><td>Callback của cả V1/V2/V3 đã deprecated và chỉ còn là bridge tương thích.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Callback theo onboarding version</h3>
+      <table>
+        <thead><tr><th><code>onboarding_config.version</code></th><th>Callback</th><th>Binding</th></tr></thead>
+        <tbody>
+          <tr><td><code>1</code></td><td><code>OnBoardingV1UiCustomizer</code> / <code>OnBoardingV1PageRenderer</code></td><td><code>OnBoardingV1PageState</code></td></tr>
+          <tr><td><code>2</code></td><td><code>OnBoardingV2UiCustomizer</code> / <code>OnBoardingV2PageRenderer</code></td><td><code>OnBoardingV2PageState</code></td></tr>
+          <tr><td><code>3</code></td><td><code>OnBoardingV3UiCustomizer</code></td><td><code>OnBoardingV3PageState</code> + <code>OnBoardingV3UiSpec</code></td></tr>
+          <tr><td><code>3</code>, UI hoàn toàn riêng</td><td><code>OnBoardingV3PageRenderer</code></td><td>View do app inflate</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Cung cấp content</h3>
+      <pre><code>@Singleton
+class AppOnBoardingContentProvider @Inject constructor() : OnBoardingContentProvider {
+    override val introPageCount = 3
+
+    override fun getImageResIntro(position: Int) = when (position) {
+        0 -&gt; R.drawable.intro_1
+        1 -&gt; R.drawable.intro_2
+        else -&gt; R.drawable.intro_3
+    }
+
+    override fun getStringIntro(position: Int) = when (position) {
+        0 -&gt; R.string.onboarding_title_1
+        1 -&gt; R.string.onboarding_title_2
+        else -&gt; R.string.onboarding_title_3
+    }
+
+    override fun getSubtitleIntro(position: Int): Int? = when (position) {
+        0 -&gt; R.string.onboarding_subtitle_1
+        1 -&gt; R.string.onboarding_subtitle_2
+        2 -&gt; R.string.onboarding_subtitle_3
+        else -&gt; null
+    }
+}</code></pre>
+      <p><code>getSubtitleIntro()</code> được UI V2 và card <code>top_v2</code> của V3 sử dụng; trả về <code>null</code> để ẩn subtitle.</p>
+
+      <h3>Custom View Binding cũ (deprecated)</h3>
+      <pre><code>@Singleton
+class AppOnBoardingUiCustomizer @Inject constructor() : OnBoardingUiCustomizer {
+    override fun customizeOnBoardingV1(
+        fragment: Fragment,
+        binding: StartflowFragmentOnboardingBinding,
+        position: Int,
+        isLastPage: Boolean,
+    ) {
+        binding.tvTitle.setTextColor(fragment.requireContext().getColor(R.color.onboarding_text))
+        binding.tvNext.setTextColor(fragment.requireContext().getColor(R.color.onboarding_primary))
+    }
+
+    override fun customizeOnBoardingV2(
+        fragment: Fragment,
+        binding: StartflowFragmentOnboardingV2Binding,
+        position: Int,
+        isLastPage: Boolean,
+    ) {
+        binding.layoutContent.setBackgroundResource(R.drawable.bg_onboarding_content)
+        binding.tvNext.setBackgroundResource(R.drawable.bg_onboarding_primary_button)
+    }
+
+}</code></pre>
+
+      <h3>Custom bằng UiSpec hoặc thay toàn bộ page</h3>
+      <pre><code>@Singleton
+class AppOnBoardingV3UiCustomizer @Inject constructor() : OnBoardingV3UiCustomizer {
+    override fun customize(
+        context: Context,
+        state: OnBoardingV3PageState,
+        current: OnBoardingV3UiSpec,
+    ) = current.copy(
+        actionText = context.getString(
+            if (state.isPageEnd) R.string.onboarding_start else R.string.onboarding_next
+        ),
+        actionBackgroundRes = R.drawable.bg_onboarding_primary_button,
+    )
+}</code></pre>
+      <p>V1/V2 dùng cùng mô hình qua <code>OnBoardingV1UiCustomizer</code>/<code>OnBoardingV2UiCustomizer</code>. V2 UiSpec có thêm <code>isActionFillGradientEnabled</code> và <code>actionFillGradientColors</code>.</p>
+      <p>App đặc thù implement <code>OnBoardingV1/V2/V3PageRenderer</code> tương ứng, inflate layout app với <code>scope.parent</code> và <code>false</code>, rồi gọi <code>scope.actions.onPrimaryAction()</code>. Với V3, forward <code>onBannerNativeResult</code> vào ad container của layout app. Không override XML của core bằng resource cùng tên.</p>
+
+      <h3>Đăng ký Hilt</h3>
+      <pre><code>@Provides
+@IntoSet
+@Singleton
+fun provideOnBoardingContentProvider(
+    provider: AppOnBoardingContentProvider,
+): OnBoardingContentProvider = provider
+
+@Provides
+@IntoSet
+@Singleton
+fun provideOnBoardingV1UiCustomizer(
+    customizer: AppOnBoardingV1UiCustomizer,
+): OnBoardingV1UiCustomizer = customizer
+
+@Provides
+@IntoSet
+@Singleton
+fun provideOnBoardingV2UiCustomizer(
+    customizer: AppOnBoardingV2UiCustomizer,
+): OnBoardingV2UiCustomizer = customizer
+
+@Provides
+@IntoSet
+@Singleton
+fun provideOnBoardingV3UiCustomizer(
+    customizer: AppOnBoardingV3UiCustomizer,
+): OnBoardingV3UiCustomizer = customizer</code></pre>
+
+      <div class="note">
+        <p><strong>Quan trọng:</strong> không giữ <code>binding</code>/<code>fragment</code>/<code>RenderScope</code> trong singleton và không thay listener Next/Get Started nếu chỉ đổi UI. API View Binding của cả ba version đã deprecated. Hãy đồng bộ <code>introPageCount</code> với <code>intro_data</code>, <code>intro_data_v2</code> hoặc <code>intro_data_v3</code>.</p>
+      </div>
+      <p>Xem hướng dẫn đầy đủ, ví dụ theo từng version và bảng ad place tại <a href="../startflow-onboarding-ui-customization.html"><code>docs/startflow-onboarding-ui-customization.html</code></a>.</p>
+    </section>
+
+    <section id="gallery">
+      <p class="section-kicker">Visual reference</p>
+      <h2>Native UI gallery</h2>
+      <div class="config-keys field"><code>native_template_size</code><code>is_native_collapsible</code><code>native_expand_template</code><code>pip_anchor_mode</code></div>
+      <p>Các ảnh dưới đây được chụp lại bằng <code>capture_native_gallery.ps1</code> qua <code>adb shell screencap</code> từ dev preview Activity, sử dụng AdMob test native id <code>ca-app-pub-3940256099942544/2247696110</code>. Gallery bao phủ toàn bộ template built-in, hai giao diện native collapsible và Picture in Picture.</p>
+      <div class="grid">
+        <figure><img src="native-screenshots/small.png" alt="small"><figcaption><code>small</code></figcaption></figure>
+        <figure><img src="native-screenshots/small_cta_top.png" alt="small_cta_top"><figcaption><code>small_cta_top</code></figcaption></figure>
+        <figure><img src="native-screenshots/small_cta_bottom.png" alt="small_cta_bottom"><figcaption><code>small_cta_bottom</code></figcaption></figure>
+        <figure><img src="native-screenshots/small_cta_right.png" alt="small_cta_right"><figcaption><code>small_cta_right</code></figcaption></figure>
+        <figure><img src="native-screenshots/small_banner_cta_right.png" alt="small_banner_cta_right"><figcaption><code>small_banner_cta_right</code></figcaption></figure>
+        <figure><img src="native-screenshots/mini_cta_right.png" alt="mini_cta_right"><figcaption><code>mini_cta_right</code></figcaption></figure>
+        <figure><img src="native-screenshots/small_long.png" alt="small_long"><figcaption><code>small_long</code></figcaption></figure>
+        <figure><img src="native-screenshots/small_for_popup.png" alt="small_for_popup"><figcaption><code>small_for_popup</code></figcaption></figure>
+        <figure><img src="native-screenshots/medium.png" alt="medium"><figcaption><code>medium</code></figcaption></figure>
+        <figure><img src="native-screenshots/medium_cta_top.png" alt="medium_cta_top"><figcaption><code>medium_cta_top</code></figcaption></figure>
+        <figure><img src="native-screenshots/medium_cta_bottom.png" alt="medium_cta_bottom"><figcaption><code>medium_cta_bottom</code></figcaption></figure>
+        <figure><img src="native-screenshots/medium_short_cta_bottom.png" alt="medium_short_cta_bottom"><figcaption><code>medium_short_cta_bottom</code></figcaption></figure>
+        <figure><img src="native-screenshots/medium_cta_right_top.png" alt="medium_cta_right_top"><figcaption><code>medium_cta_right_top</code></figcaption></figure>
+        <figure><img src="native-screenshots/medium_cta_right.png" alt="medium_cta_right"><figcaption><code>medium_cta_right</code></figcaption></figure>
+        <figure><img src="native-screenshots/medium_media_right.png" alt="medium_media_right"><figcaption><code>medium_media_right</code></figcaption></figure>
+        <figure><img src="native-screenshots/medium_media_left.png" alt="medium_media_left"><figcaption><code>medium_media_left</code></figcaption></figure>
+        <figure><img src="native-screenshots/medium_media_cta_right.png" alt="medium_media_cta_right"><figcaption><code>medium_media_cta_right</code></figcaption></figure>
+        <figure><img src="native-screenshots/medium_media_left_cta_right.png" alt="medium_media_left_cta_right"><figcaption><code>medium_media_left_cta_right</code></figcaption></figure>
+        <figure><img src="native-screenshots/large_media_cta_right.png" alt="large_media_cta_right"><figcaption><code>large_media_cta_right</code></figcaption></figure>
+        <figure><img src="native-screenshots/full_cta_bottom.png" alt="full_cta_bottom"><figcaption><code>full_cta_bottom</code></figcaption></figure>
+        <figure><img src="native-screenshots/full_cta_bottom_onboarding.png" alt="full_cta_bottom_onboarding"><figcaption><code>full_cta_bottom_onboarding</code></figcaption></figure>
+        <figure><img src="native-screenshots/full_cta_top.png" alt="full_cta_top"><figcaption><code>full_cta_top</code></figcaption></figure>
+        <figure><img src="native-screenshots/full_cta_right.png" alt="full_cta_right"><figcaption><code>full_cta_right</code></figcaption></figure>
+        <figure><img src="native-screenshots/full_interstitial_v1.png" alt="full_interstitial_v1"><figcaption><code>full_interstitial_v1</code></figcaption></figure>
+        <figure><img src="native-screenshots/full_interstitial_v2.png" alt="full_interstitial_v2"><figcaption><code>full_interstitial_v2</code></figcaption></figure>
+        <figure><img src="native-screenshots/full_interstitial_v3.png" alt="full_interstitial_v3"><figcaption><code>full_interstitial_v3</code></figcaption></figure>
+        <figure><img src="native-screenshots/medium_collapsible_cta_bottom.png" alt="medium_cta_bottom with native_expand_v1"><figcaption><code>medium_cta_bottom</code> + <code>native_expand_v1</code></figcaption></figure>
+        <figure><img src="native-screenshots/medium_collapsible_cta_bottom_v2.png" alt="medium_cta_bottom with native_expand_v2"><figcaption><code>medium_cta_bottom</code> + <code>native_expand_v2</code></figcaption></figure>
+        <figure><img src="native-screenshots/native_pip.png" alt="native_pip picture in picture"><figcaption><code>native_pip</code> · Picture in Picture</figcaption></figure>
+      </div>
+      <div class="note">
+        <p><strong>Custom native:</strong> key không nằm trong danh sách built-in sẽ thành <code>NativeTemplateSize.CustomKey</code> và được chuyển sang <code>CustomNativeProvider.getInstance().getCustomNativeAds()</code>. Riêng <code>native_pip</code> được render bằng <code>NativePictureInPicture</code> theo luồng PIP chuyên dụng đã mô tả ở phần Native Picture in Picture.</p>
+      </div>
+    </section>
+    </article>
+  </main>
+  <script>
+    (() => {
+      const normalize = (value) => value
+        .toLocaleLowerCase('vi')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+
+      document.querySelectorAll('.content table').forEach((table) => {
+        if (table.parentElement.classList.contains('table-wrap')) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'table-wrap';
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+      });
+
+      document.querySelectorAll('pre').forEach((pre) => {
+        const code = pre.querySelector('code');
+        if (!code) return;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'copy-button';
+        button.textContent = 'Sao chép';
+        button.setAttribute('aria-label', 'Sao chép đoạn mã');
+        button.addEventListener('click', async () => {
+          const text = code.textContent;
+          try {
+            await navigator.clipboard.writeText(text);
+          } catch (_) {
+            const input = document.createElement('textarea');
+            input.value = text;
+            input.style.position = 'fixed';
+            input.style.opacity = '0';
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            input.remove();
+          }
+          button.textContent = 'Đã chép';
+          window.setTimeout(() => { button.textContent = 'Sao chép'; }, 1400);
+        });
+        pre.appendChild(button);
+      });
+
+      document.querySelectorAll('figure img').forEach((image) => {
+        image.loading = 'lazy';
+        image.decoding = 'async';
+      });
+
+      const search = document.querySelector('#key-search');
+      const rows = [...document.querySelectorAll('#key-table tbody tr')];
+      const count = document.querySelector('#key-result-count');
+      const tableWrapper = document.querySelector('#key-table')?.parentElement;
+      const empty = document.createElement('p');
+      empty.className = 'empty-state';
+      empty.textContent = 'Không tìm thấy parameter phù hợp.';
+      tableWrapper?.after(empty);
+
+      const filterKeys = () => {
+        const query = normalize(search?.value.trim() || '');
+        let visible = 0;
+        rows.forEach((row) => {
+          const match = normalize(row.textContent).includes(query);
+          row.hidden = !match;
+          if (match) visible += 1;
+        });
+        if (count) count.textContent = `${visible}/${rows.length} key`;
+        if (tableWrapper) tableWrapper.style.display = visible ? '' : 'none';
+        empty.style.display = visible ? 'none' : 'block';
+      };
+      search?.addEventListener('input', filterKeys);
+      filterKeys();
+
+      const links = [...document.querySelectorAll('.toc a')];
+      const linkById = new Map(links.map((link) => [link.hash.slice(1), link]));
+      const observer = new IntersectionObserver((entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (!visible) return;
+        links.forEach((link) => link.classList.remove('active'));
+        linkById.get(visible.target.id)?.classList.add('active');
+      }, { rootMargin: '-12% 0px -72% 0px', threshold: 0 });
+      document.querySelectorAll('.content > section[id]').forEach((section) => observer.observe(section));
+      linkById.get(location.hash.slice(1) || 'overview')?.classList.add('active');
+    })();
+  </script>
+</body>
+</html>

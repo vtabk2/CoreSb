@@ -1,0 +1,911 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--is_hide_navigation_bar = tắt navigationBar-->
+<!--is_enable_ads = tắt bật toàn bộ quảng cáo-->
+<!--is_preload_banner_native_exit = load trước quảng cáo cho dialog exit-->
+<!--is_always_show_intro_and_language_screen = Luôn hiển thị màn hình language và intro - onboarding khi vào app-->
+<!--is_enable_introduction_screen = Cho phép hiển thị màn hình intro - onboarding-->
+<!--is_enable_change_language_screen = Cho phép hiển thị màn hình language-->
+<!--is_enable_app_shortcut = Mở short cut-->
+<!--is_enable_app_shortcut_uninstall = Mở short cut uninstall-->
+<!--is_enable_open_app_ads_from_uninstall_shortcut = Cho phép hiển thị open ads khi từ uninstall short cut-->
+<!--is_enable_open_app_ads_from_shortcut = Cho phép hiển thị open ads khi từ short cut-->
+
+<!--intro data-->
+<!--0 = không có ads-->
+<!--1 = Có ads-->
+<!--2 = Full ads-->
+<defaults>
+    <entry>
+        <key>application_config</key>
+        <value>
+            {
+            "is_hide_navigation_bar": true,
+            "is_enable_ads": true,
+            "is_preload_banner_native_exit":true,
+            "is_always_preload_banner_native_ads_when_start": true,
+            "is_hide_native_banner_when_network_error": true,
+            "is_always_show_intro_and_language_screen": false,
+            "is_always_show_intro_and_language_screen_with_interval": false,
+            "is_enable_introduction_screen": true,
+            "is_enable_change_language_screen": true,
+            "is_enable_app_shortcut": true,
+            "is_enable_app_shortcut_uninstall": true,
+            "is_enable_open_app_ads_from_uninstall_shortcut": false,
+            "is_enable_open_app_ads_from_shortcut": false,
+            "interval_day_always_show_intro_and_language": 1,
+            "intro_data": [
+            0,
+            2,
+            0,
+            2,
+            1
+            ],
+            "intro_data_v2": [
+            0,
+            2,
+            0,
+            2,
+            1
+            ],
+            "intro_data_v3": [
+            1,
+            1,
+            2,
+            1
+            ]
+            }
+        </value>
+    </entry>
+    <entry>
+        <key>prevent_ad_click_config</key>
+        <value>
+            {
+            "max_ad_click_per_session": 6,
+            "time_per_session": 120,
+            "time_disable_ads_when_reached_max_ad_click": 20
+            }
+        </value>
+    </entry>
+    <entry>
+        <key>tutorial_config</key>
+        <value>
+            {
+            "enable_all_ads": true,
+            "enable_ad_1": true,
+            "enable_ad_2": true
+            }
+        </value>
+    </entry>
+    <entry>
+        <key>ads_disabled_by_country</key>
+        <value>
+            [
+            "cx",
+            "cv"
+            ]
+        </value>
+    </entry>
+
+    <!--ad_type_first_open: interstitial hoặc app_open - Lần đầu vào app -->
+    <!--ad_type: interstitial hoặc app_open - Từ lần thứ 2 vào app -->
+    <entry>
+        <key>splash_screen_config</key>
+        <value>
+            {
+            "max_time_to_wait_app_open_ad": 10,
+            "time_skip_app_open_ad_when_not_available": 6,
+            "ad_type_first_open": "interstitial",
+            "ad_type": "interstitial",
+            "is_enable_retry": true,
+            "is_load_before_eu_consent": true,
+            "min_time_wait_progress_before_show_ad": 3,
+            "max_retry_count": 1
+            }
+        </value>
+    </entry>
+    <!--với Banner-->
+    <!--ad_type: banner-->
+    <!--banner_size: anchored - inline - standard_medium - standard_large-->
+    <!--is_collapsible: true - false , tắt, mở collapsible banner-->
+
+    <!--với Native-->
+    <!--ad_type: banner - native-->
+    <!--native_template_size:
+    small - small_cta_top - small_cta_bottom - small_cta_right - small_banner_cta_right -
+    small_long - small_for_popup - medium - medium_cta_top - medium_cta_bottom - medium_short_cta_bottom -
+    medium_cta_right_top - medium_cta_right - medium_media_right -
+    medium_media_left - medium_media_cta_right - medium_media_left_cta_right - large_media_cta_right - full_cta_bottom - full_cta_top - full_cta_right - full_cta_bottom_onboarding
+    hoặc custom key
+    -->
+    <!--is_native_collapsible: true - false, bật popup collapsible cho native template thường-->
+    <!--native_expand_template: native_expand_v1 - native_expand_v2-->
+    <!--background_color: màu nền-->
+    <!--primary_text_color: màu text primary-->
+    <!--primary_text_size_dp: số nguyên 1..35 ánh xạ tới @dimen/_Ndp; ngoài khoảng dùng layout mặc định-->
+    <!--body_text_color: màu text body-->
+    <!--body_text_size_dp: số nguyên 1..35 ánh xạ tới @dimen/_Ndp; ngoài khoảng dùng layout mặc định-->
+    <!--background_cta: -->
+    <!--cta_text_color: -->
+    <!--cta_text_size_dp: số nguyên 1..35 ánh xạ tới @dimen/_Ndp; ngoài khoảng dùng layout mặc định-->
+    <!--border_color: -->
+    <!--refresh_time_second: native reload interval in seconds, <= 0 disables refresh-->
+
+    <!--chung-->
+    <!--is_enable: bật tắt ví trí quảng cáo-->
+    <!--ad_id: id quảng cáo-->
+    <!--place_name: ví trí quảng cáo-->
+    <!--is_tracking_click: Bật tắt tracking click vào quảng cáo-->
+
+<!--    <entry>-->
+<!--        <key>banner_native_ad_places_2</key>-->
+<!--        <value>-->
+<!--            [-->
+<!--            {-->
+<!--            "place_name": "anchored_change_language_bottom",-->
+<!--            "ad_id": "ca-app-pub-3940256099942544/2014213617",-->
+<!--            "ad_type": "banner",-->
+<!--            "banner_size": "anchored",-->
+<!--            "is_collapsible": true,-->
+<!--            "native_template_size": "small_cta_bottom",-->
+<!--            "is_enable": true,-->
+<!--            "is_tracking_click": true,-->
+<!--            "background_color": "#F5F6F9",-->
+<!--            "primary_text_color": "#3B3B3B",-->
+<!--            "body_text_color": "#828282",-->
+<!--            "background_cta": "#2CA6FF",-->
+<!--            "border_color": "#E1E1E1"-->
+<!--            },-->
+<!--            {-->
+<!--            "place_name": "anchored_bottom_home",-->
+<!--            "ad_id": "ca-app-pub-3940256099942544/9214589741",-->
+<!--            "ad_type": "banner",-->
+<!--            "is_tracking_click": true,-->
+<!--            "banner_size": "anchored_large",-->
+<!--            "is_enable": true-->
+<!--            }-->
+<!--            ]-->
+<!--        </value>-->
+<!--    </entry>-->
+    <entry>
+        <key>banner_native_ad_places</key>
+        <value>
+            [
+            {
+            "place_name": "anchored_change_language_bottom",
+            "ad_id": "ca-app-pub-3940256099942544/2014213617",
+            "ad_type": "banner",
+            "banner_size": "anchored",
+            "is_collapsible": true,
+            "native_template_size": "small_cta_bottom",
+            "is_enable": true,
+            "is_tracking_click": true,
+            "background_color": "#F5F6F9",
+            "primary_text_color": "#3B3B3B",
+            "body_text_color": "#828282",
+            "background_cta": "#2CA6FF",
+            "border_color": "#E1E1E1"
+            },
+            {
+            "place_name": "anchored_onboarding_bottom",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "ad_type": "native",
+            "is_tracking_click": true,
+            "native_template_size": "small_cta_bottom",
+            "is_tutorial_flow": true,
+            "is_enable": true,
+            "background_color": "#242424",
+            "primary_text_color": "#F0F0F0",
+            "body_text_color": "#8A8A8A",
+            "background_cta": "#5E56F5",
+            "border_color": "#242424"
+            },
+            {
+            "place_name": "anchored_onboarding_bottom_v2",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "high_floor_ad_ids": ["ca-app-pub-3940256099942544/2247696110"],
+            "ad_type": "native",
+            "is_tracking_click": true,
+            "native_template_size": "small_cta_bottom",
+            "is_tutorial_flow": true,
+            "is_enable": true,
+            "background_color": "#ffffff",
+            "primary_text_color": "#1D1D1D",
+            "body_text_color": "#404040",
+            "background_cta": "#F59E0B,#EF4444",
+            "border_color": "#D1D1D1",
+            "cta_radius_dp": 12
+            },
+            {
+            "place_name": "anchored_full_onboarding",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "high_floor_ad_ids": ["ca-app-pub-3940256099942544/2247696110"],
+            "ad_type": "native",
+            "native_template_size": "full_cta_bottom_onboarding",
+            "is_tutorial_flow": true,
+            "is_enable": true,
+            "background_color": "#FFFFFF",
+            "background_full_color": "#FFFFFF",
+            "is_tracking_click": true,
+            "primary_text_color": "#1D1D1D",
+            "body_text_color": "#404040",
+            "background_cta": "#F59E0B,#EF4444",
+            "border_color": "#D1D1D1",
+            "cta_radius_dp": 12
+            },
+            {
+            "place_name": "anchored_full_onboarding_v2",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "high_floor_ad_ids": ["ca-app-pub-3940256099942544/2247696110"],
+            "ad_type": "native",
+            "native_template_size": "full_cta_bottom_onboarding",
+            "is_tutorial_flow": true,
+            "is_enable": true,
+            "background_color": "#767676,#00000000",
+            "background_full_color": "#000",
+            "is_tracking_click": true,
+            "primary_text_color": "#ffffff",
+            "body_text_color": "#ffffff",
+            "background_cta": "#F59E0B,#EF4444",
+            "border_color": "#00000000",
+            "cta_radius_dp": 12
+            },
+            {
+            "place_name": "flow_tutorial_201_language_1_n_native",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "high_floor_ad_ids": [
+            "ca-app-pub-3940256099942544/2247696110"
+            ],
+            "ad_type": "native",
+            "is_tracking_click": true,
+            "native_template_size": "medium_cta_bottom",
+            "is_enable": true,
+            "background_color": "#FCFAFF",
+            "primary_text_color": "#141218",
+            "body_text_color": "#938f96",
+            "is_tutorial_flow": true,
+            "background_cta": "#9747ff",
+            "border_color": "#eaddff",
+            "cta_radius_dp": 99
+            },
+            {
+            "place_name": "flow_tutorial_201_language_2_n_native",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "high_floor_ad_ids": [
+            "ca-app-pub-3940256099942544/2247696110"
+            ],
+            "ad_type": "native",
+            "is_tracking_click": true,
+            "native_template_size": "medium_cta_bottom",
+            "is_enable": true,
+            "background_color": "#FCFAFF",
+            "is_tutorial_flow": true,
+            "primary_text_color": "#141218",
+            "body_text_color": "#938f96",
+            "background_cta": "#9747ff",
+            "border_color": "#eaddff",
+            "cta_radius_dp": 99
+            },
+            {
+            "place_name": "flow_tutorial_201_language_3_n_native",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "high_floor_ad_ids": [
+            "ca-app-pub-3940256099942544/2247696110"
+            ],
+            "ad_type": "native",
+            "is_tracking_click": true,
+            "is_tutorial_flow": true,
+            "native_template_size": "medium_cta_bottom",
+            "is_enable": true,
+            "background_color": "#FCFAFF",
+            "primary_text_color": "#141218",
+            "body_text_color": "#938f96",
+            "background_cta": "#9747ff",
+            "border_color": "#eaddff",
+            "cta_radius_dp": 99
+            },
+            {
+            "place_name": "flow_tutorial_301_onb1_n_native",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "high_floor_ad_ids": [
+            "ca-app-pub-3940256099942544/2247696110"
+            ],
+            "ad_type": "native",
+            "is_tracking_click": true,
+            "is_tutorial_flow": true,
+            "native_template_size": "medium_short_cta_bottom",
+            "is_enable": true,
+            "background_color": "#FCFAFF",
+            "primary_text_color": "#141218",
+            "body_text_color": "#938f96",
+            "background_cta": "#9747ff",
+            "border_color": "#eaddff",
+            "cta_radius_dp": 99
+            },
+            {
+            "place_name": "flow_tutorial_302_onb2_n_native",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "high_floor_ad_ids": [
+            "ca-app-pub-3940256099942544/2247696110"
+            ],
+            "ad_type": "native",
+            "is_tracking_click": true,
+            "native_template_size": "medium_short_cta_bottom",
+            "is_enable": true,
+            "is_tutorial_flow": true,
+            "background_color": "#FCFAFF",
+            "primary_text_color": "#141218",
+            "body_text_color": "#938f96",
+            "background_cta": "#9747ff",
+            "border_color": "#eaddff",
+            "cta_radius_dp": 99
+            },
+            {
+            "place_name": "flow_tutorial_303_onb3_n_native",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "high_floor_ad_ids": [
+            "ca-app-pub-3940256099942544/2247696110"
+            ],
+            "ad_type": "native",
+            "native_template_size": "full_cta_bottom",
+            "is_enable": true,
+            "is_tutorial_flow": true,
+            "background_color": "#FFFFFF",
+            "background_full_color": "#000",
+            "is_tracking_click": true,
+            "primary_text_color": "#1D1D1D",
+            "body_text_color": "#404040",
+            "background_cta": "#9747ff",
+            "border_color": "#eaddff",
+            "cta_radius_dp": 99
+            },
+            {
+            "place_name": "flow_tutorial_303_onb4_n_native",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "high_floor_ad_ids": [
+            "ca-app-pub-3940256099942544/2247696110"
+            ],
+            "ad_type": "native",
+            "is_tracking_click": true,
+            "native_template_size": "medium_short_cta_bottom",
+            "is_enable": true,
+            "is_tutorial_flow": true,
+            "background_color": "#FCFAFF",
+            "primary_text_color": "#141218",
+            "body_text_color": "#938f96",
+            "background_cta": "#9747ff",
+            "border_color": "#eaddff",
+            "cta_radius_dp": 99
+            },
+            {
+            "place_name": "flow_tutorial_v1_201_language_1_n_native",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "ad_type": "native",
+            "is_tracking_click": true,
+            "native_template_size": "medium_cta_bottom",
+            "is_enable": true,
+            "background_color": "#FCFAFF",
+            "primary_text_color": "#141218",
+            "body_text_color": "#938f96",
+            "background_cta": "#9747ff",
+            "border_color": "#eaddff",
+            "cta_radius_dp": 99
+            },
+            {
+            "place_name": "flow_tutorial_v1_201_language_2_n_native",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "ad_type": "native",
+            "is_tracking_click": true,
+            "native_template_size": "medium_cta_bottom",
+            "is_enable": true,
+            "background_color": "#FCFAFF",
+            "primary_text_color": "#141218",
+            "body_text_color": "#938f96",
+            "background_cta": "#9747ff",
+            "border_color": "#eaddff",
+            "cta_radius_dp": 99
+            },
+            {
+            "place_name": "anchored_change_language_v2_from_setting_native",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "ad_type": "native",
+            "is_tracking_click": true,
+            "native_template_size": "medium_cta_bottom",
+            "is_enable": true,
+            "background_color": "#FCFAFF",
+            "primary_text_color": "#141218",
+            "body_text_color": "#938f96",
+            "background_cta": "#9747ff",
+            "border_color": "#eaddff",
+            "cta_radius_dp": 99
+            },
+            {
+            "place_name": "anchored_uninstall_bottom_step_1",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "ad_type": "native",
+            "is_tracking_click": true,
+            "native_template_size": "small_cta_bottom",
+            "is_enable": true,
+            "background_color": "#242424",
+            "primary_text_color": "#F0F0F0",
+            "body_text_color": "#8A8A8A",
+            "background_cta": "#5E56F5",
+            "border_color": "#242424"
+            },
+            {
+            "place_name": "anchored_uninstall_bottom_step_2",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "ad_type": "native",
+            "is_tracking_click": true,
+            "native_template_size": "small_cta_bottom",
+            "is_enable": true,
+            "background_color": "#242424",
+            "primary_text_color": "#F0F0F0",
+            "body_text_color": "#8A8A8A",
+            "background_cta": "#5E56F5",
+            "border_color": "#242424"
+            },
+            {
+            "place_name": "anchored_native_collapsible_test",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "ad_type": "native",
+            "native_template_size": "small_cta_bottom",
+            "is_native_collapsible": true,
+            "native_expand_template": "native_expand_v2",
+            "is_tracking_click": true,
+            "is_enable": true,
+            "background_color": "#FFFFFF",
+            "cta_radius_dp": 5,
+            "primary_text_color": "#1F2937",
+            "body_text_color": "#6B7280",
+            "cta_text_color": "#FFFFFF",
+            "background_cta": "#5E56F5",
+            "border_color": "#E5E7EB",
+            "control_close_position": "right",
+            "collapsible_expand_cooldown_second": 10,
+            "refresh_time_second": 10,
+            "expired_time_second": 10
+            },
+            {
+            "place_name": "anchored_native_test",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "ad_type": "native",
+            "native_template_size": "small_banner_cta_right",
+            "is_enable": true,
+            "is_tracking_click": true,
+            "cta_radius_dp": 5,
+            "background_color": "#242424",
+            "cta_border_color": "#ffffff",
+            "background_radius": 0,
+            "primary_text_color": "#F0F0F0",
+            "body_text_color": "#8A8A8A",
+            "background_cta": "#5E56F5",
+            "border_color": "#242424"
+            },
+            {
+            "place_name": "anchored_exit",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "ad_type": "native",
+            "is_tracking_click": true,
+            "native_template_size": "medium_cta_bottom",
+            "is_enable": true,
+            "background_color": "#242424",
+            "primary_text_color": "#F0F0F0",
+            "body_text_color": "#8A8A8A",
+            "background_cta": "#5E56F5",
+            "border_color": "#242424"
+            },
+            {
+            "place_name": "anchored_banner_test",
+            "ad_id": "ca-app-pub-3940256099942544/2014213617",
+            "ad_type": "banner",
+            "is_collapsible": false,
+            "is_tracking_click": true,
+            "banner_size": "anchored",
+            "is_enable": true
+            },
+            {
+            "place_name": "anchored_native_in_list_test",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "ad_type": "native",
+            "native_template_size": "small",
+            "is_tracking_click": true,
+            "is_enable": true,
+            "background_color": "#242424",
+            "cta_radius_dp": 5,
+            "primary_text_color": "#F0F0F0",
+            "body_text_color": "#8A8A8A",
+            "cta_text_color": "#000000",
+            "background_cta": "#5E56F5",
+            "border_color": "#242424"
+            },
+            {
+            "place_name": "anchored_bottom_home",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "ad_type": "native",
+            "native_template_size": "small",
+            "banner_size": "standard_large",
+            "is_tracking_click": true,
+            "is_enable": true,
+            "background_color": "#FFFFFF",
+            "cta_radius_dp": 5,
+            "primary_text_color": "#1F2937",
+            "body_text_color": "#6B7280",
+            "cta_text_color": "#FFFFFF",
+            "background_cta": "#5E56F5",
+            "border_color": "#E5E7EB",
+            "control_close_position": "left",
+            "collapsible_expand_cooldown_second": 10,
+            "refresh_time_second": 10,
+            "expired_time_second": 10
+            },
+            {
+            "place_name": "anchored_native_pip_home",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "ad_type": "native",
+            "native_template_size": "native_pip",
+            "is_tracking_click": true,
+            "is_enable": true,
+            "background_color": "#FFFFFF",
+            "primary_text_color": "#1F2937",
+            "body_text_color": "#111827",
+            "cta_text_color": "#FFFFFF",
+            "background_cta": "#FFC21A,#FF7A00",
+            "border_color": "#FFFFFF",
+            "expired_time_second": 60,
+            "count_down_timer": 3,
+            "refresh_time_second": 10,
+            "pip_anchor_mode": "fixed",
+            "pip_layout_format": "media_card",
+            "background_color_ads_notify_view": "#FF7A00",
+            "text_color_ads_notify_view": "#ffffff",
+            "pip_margin_dp": 20,
+            "pip_top_margin_dp": 40
+            }
+            ]
+        </value>
+    </entry>
+
+    <!--open_app_first_open: app open đầu tiên vào app-->
+    <!--open_app: app open từ lần thứ 2 vào app-->
+    <!--reopen_app: open khi resumed app-->
+
+    <entry>
+        <key>app_open_ad_places</key>
+        <value>
+            [
+            {
+            "place_name": "open_app_first_open",
+            "ad_id": "ca-app-pub-3940256099942544/9257395921",
+            "ad_type": "app_open",
+            "is_enable": true
+            },
+            {
+            "place_name": "open_app",
+            "ad_id": "ca-app-pub-3940256099942544/9257395921",
+            "ad_type": "app_open",
+            "is_enable": true
+            },
+            {
+            "place_name": "reopen_app",
+            "ad_id": "ca-app-pub-3940256099942544/9257395921",
+            "ad_type": "app_open",
+            "is_enable": true
+            }
+            ]
+        </value>
+    </entry>
+
+    <!--action_app_open_first_open = app open đầu tiên vào app-->-->
+    <!--action_app_open = từ lần thứ 2 vào app->-->
+    <!--is_auto_load_after_dismiss = false app dụng cho màn splash->-->
+    <!--ad_type = interstitial - rewarded - native_interstitial (load/show qua API fullscreen)-->
+    <!--Cấu hình native sau interstitial / native interstitial v3-->
+    <!--is_show_native_after = true thì show native_config sau khi interstitial dismiss; false thì chỉ show interstitial như cũ-->
+    <!--native_after_load_strategy = with_interstitial để load native cùng lúc load interstitial; on_interstitial_impression để load native khi interstitial bắt đầu show/impression-->
+    <!--native_config = cấu hình native ad sẽ được show sau interstitial; place_name có thể là remote place name riêng cho native-->
+    <!--control_close_position = left hoặc right, quyết định vị trí nút next/close của native interstitial v3-->
+    <!--close_step_count = 1 hoặc 2; 1 thì countdown xong cho close luôn với 1 progress bar; 2 thì step 1 next và step 2 close với 2 progress bar-->
+    <!--step_1_count_down_timer = số giây countdown cho step đầu tiên; nếu không có thì fallback về count_down_timer-->
+    <!--step_2_count_down_timer = số giây countdown cho step close trong chế độ 2-step; nếu không có thì fallback về count_down_timer-->
+
+    <entry>
+        <key>rewarded_rewardedinter_inter_ad_places</key>
+        <value>
+            [
+            {
+            "place_name": "action_app_open_first_open",
+            "ad_id": "ca-app-pub-3940256099942544/1033173712",
+            "ad_type": "interstitial",
+            "high_floor_ad_ids": [
+                "ca-app-pub-3940256099942544/1033173719"
+            ],
+            "is_enable": false,
+            "is_auto_load_after_dismiss": true
+            },
+            {
+            "place_name": "action_app_open",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "ad_type": "native_interstitial",
+            "native_template_size": "full_interstitial_v3",
+            "background_full_color": "#FFFFFF",
+            "control_close_position": "left",
+            "close_step_count": 1,
+            "count_down_timer": 5,
+            "is_enable": true,
+            "is_auto_load_after_dismiss": true
+            },
+            {
+            "place_name": "fullscreen_test",
+            "ad_id": "ca-app-pub-3940256099942544/1033173712",
+            "ad_type": "interstitial",
+            "is_enable": true,
+            "is_show_native_after": true,
+            "native_after_load_strategy": "on_interstitial_impression",
+            "native_config": {
+                    "place_name": "fullscreen_test_native",
+                    "ad_id": "ca-app-pub-3940256099942544/2247696110",
+                    "ad_type": "native",
+                    "native_template_size": "full_interstitial_v3",
+                    "is_tracking_click": true,
+                    "is_enable": true,
+                    "background_color": "#CD121212",
+                    "background_full_color": "#FFFFFF",
+                    "cta_radius_dp": 5,
+                    "primary_text_color": "#1F2937",
+                    "body_text_color": "#6B7280",
+                    "cta_text_color": "#FFFFFF",
+                    "background_cta": "#22C55E",
+                    "border_color": "#00000000",
+                    "control_close_position": "left",
+                    "count_down_timer": 5,
+                    "close_step_count": 1,
+                    "step_1_count_down_timer": 2,
+                    "step_2_count_down_timer": 2
+                }
+            },
+            {
+            "place_name": "fullscreen_show_to_home",
+            "ad_id": "ca-app-pub-3940256099942544/1033173712",
+            "ad_type": "interstitial",
+            "is_enable": true
+            },
+            {
+            "place_name": "reward_test",
+            "ad_id": "ca-app-pub-3940256099942544/5224354917",
+            "ad_type": "rewarded",
+            "is_enable": true
+            }
+            ,
+            {
+            "place_name": "fullscreen_test_lazy_load",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "ad_type": "native",
+            "native_template_size": "full_interstitial_v2",
+            "is_tracking_click": true,
+            "is_enable": true,
+            "background_color": "#FFFFFF",
+            "background_full_color": "#FFFFFF",
+            "cta_radius_dp": 5,
+            "primary_text_color": "#1F2937",
+            "body_text_color": "#6B7280",
+            "cta_text_color": "#FFFFFF",
+            "background_cta": "#22C55E",
+            "border_color": "#E5E7EB",
+            "count_down_timer": 5
+            },
+            {
+            "place_name": "fullscreen_native_interstitial",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "ad_type": "native_interstitial",
+            "native_template_size": "full_interstitial_v3",
+            "is_tracking_click": true,
+            "is_enable": true,
+            "background_color": "#CD121212",
+            "background_full_color": "#FFFFFF",
+            "cta_radius_dp": 5,
+            "primary_text_color": "#1F2937",
+            "body_text_color": "#6B7280",
+            "cta_text_color": "#FFFFFF",
+            "background_cta": "#22C55E",
+            "border_color": "#00000000",
+            "control_close_position": "left",
+            "count_down_timer": 5
+            },
+            {
+            "place_name": "fullscreen_test_lazy_load_light",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "ad_type": "native",
+            "native_template_size": "full_interstitial_v2",
+            "is_tracking_click": true,
+            "is_enable": true,
+            "background_color": "#FFFFFF",
+            "background_full_color": "#FFFFFF",
+            "cta_radius_dp": 5,
+            "primary_text_color": "#1F2937",
+            "body_text_color": "#6B7280",
+            "cta_text_color": "#FFFFFF",
+            "background_cta": "#22C55E",
+            "border_color": "#E5E7EB",
+            "count_down_timer": 30
+            },
+            {
+            "place_name": "fullscreen_test_lazy_load_dark",
+            "ad_id": "ca-app-pub-3940256099942544/2247696110",
+            "ad_type": "native",
+            "native_template_size": "full_interstitial_v2",
+            "is_tracking_click": true,
+            "is_enable": true,
+            "background_color": "#2d3d4a",
+            "background_full_color": "#2d3d4a",
+            "cta_radius_dp": 5,
+            "primary_text_color": "#F0F0F0",
+            "body_text_color": "#8A8A8A",
+            "cta_text_color": "#1f3837",
+            "background_cta": "#77cf7f",
+            "border_color": "#2d3d4a",
+            "count_down_timer": 30
+            },
+            {
+            "place_name": "fullscreen_back_language_setting",
+            "ad_id": "ca-app-pub-3940256099942544/1033173712",
+            "ad_type": "interstitial",
+            "is_enable": true
+            },
+            {
+            "place_name": "action_next_in_introduction",
+            "ad_id": "ca-app-pub-3940256099942544/1033173712",
+            "is_ignore_interval": true,
+            "high_floor_ad_ids": [
+                "ca-app-pub-3940256099942544/1033173719"
+            ],
+            "ad_type": "interstitial",
+            "is_tutorial_flow": true,
+            "is_auto_load_after_dismiss": false,
+            "is_enable": true
+            }
+            ]
+        </value>
+    </entry>
+    <entry>
+        <key>interstitial_ad_config</key>
+        <value>
+            {
+            "is_wait_load_to_show": false,
+            "ads_per_session": 99,
+            "time_per_session": 600,
+            "time_interval": 3,
+            "time_interval_after_show_open_ad": 3,
+            "meaningful_actions_between_interstitial": 3,
+            "is_enable_retry": true,
+            "max_retry_count": 5,
+            "retry_interval_second_list": [
+            1,
+            2,
+            3
+            ]
+            }
+        </value>
+    </entry>
+    <entry>
+        <key>rewarded_ad_config</key>
+        <value>
+            {
+            "is_wait_load_to_show": false,
+            "is_enable_retry": true,
+            "max_retry_count": 5,
+            "max_retry_on_context":2,
+            "time_wait_retry_on_context":5,
+            "retry_interval_second_list": [
+            1,
+            2,
+            3
+            ]
+            }
+        </value>
+    </entry>
+    <!--reopen mode = custom_activity/app_open_ad-->
+    <entry>
+        <key>app_open_ad_config</key>
+        <value>
+            {
+            "time_interval": 3,
+            "reopen_mode": "app_open_ad",
+            "time_millis_delay_before_show": 200,
+            "is_enable_retry": true,
+            "max_retry_count": 5,
+            "retry_interval_second_list": [
+            1,
+            2,
+            3
+            ]
+            }
+        </value>
+    </entry>
+    <entry>
+        <key>native_ad_config</key>
+        <value>
+            {
+            "is_enable_retry": true,
+            "max_retry_count": 5,
+            "is_hide_when_error": true,
+            "retry_interval_second_list": [
+            1,
+            2,
+            3
+            ]
+            }
+        </value>
+    </entry>
+    <entry>
+        <key>banner_ad_config</key>
+        <value>
+            {
+            "is_enable_retry": true,
+            "max_retry_count": 5,
+            "is_hide_when_error": true,
+            "retry_interval_second_list": [
+            1,
+            2,
+            3
+            ]
+            }
+        </value>
+    </entry>
+    <entry>
+        <key>request_consent_config</key>
+        <value>
+            {
+            "is_enable": true,
+            "debug_is_eea": true,
+            "debug_list_test_device_hashed_id": [
+            "460E79ECA70EF328A2F505FFB68470B9"
+            ]
+            }
+        </value>
+    </entry>
+    <!--position_next:bottom/top-->
+    <entry>
+        <key>onboarding_config</key>
+        <value>
+            {
+            "version": 3,
+            "position_next": "top_v2",
+            "is_show_close": true,
+            "is_show_swipe": false,
+            "delay_show_close_swipe_seconds": 1,
+            "background_top_next": "#000000"
+            }
+        </value>
+    </entry>
+
+    <entry>
+        <key>language_activity_config</key>
+        <value>
+            {
+            "version": 2,
+            "time_show_loading_lfo": 3,
+            "is_show_click_guide": false
+            }
+        </value>
+    </entry>
+
+    <entry>
+        <key>ad_places_disable_when_detect_test_ad</key>
+        <value>
+            [
+            "anchored_uninstall_bottom_step_1",
+            "anchored_uninstall_bottom_step_2",
+            "anchored_onboarding_bottom",
+            "anchored_full_onboarding",
+            "action_next_in_introduction",
+            "action_skip_in_introduction"
+            ]
+        </value>
+    </entry>
+
+    <entry>
+        <key>is_turn_on_ad_places_disabled_when_detect_test_ad</key>
+        <value>true</value>
+    </entry>
+</defaults>

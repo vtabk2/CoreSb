@@ -1,0 +1,145 @@
+package com.codebasetemplate.features.main.ui
+
+import android.content.Intent
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import com.codebasetemplate.databinding.CoreFragmentMainBinding
+import com.codebasetemplate.features.feature_demo_banner_native.ui.NativeGalleryActivity
+import com.codebasetemplate.features.feature_demo_native_collapsible.ui.CollapsibleNativeTestActivity
+import com.codebasetemplate.features.feature_demo_native_pip.ui.NativePipTestActivity
+import com.codebasetemplate.features.feature_reward.RewardTestActivity
+import com.codebasetemplate.features.main.ui.host.MainHostEvent
+import com.codebasetemplate.features.main.ui.host.MainHostViewModel
+import com.codebasetemplate.required.ads.AppAdPlaceName
+import com.core.ads.domain.AdLoadBannerNativeUiResource
+import com.core.baseui.fragment.BaseChildOfHostFragment
+import com.core.baseui.fragment.CoreScreenType
+import com.core.baseui.fragment.ScreenType
+import com.core.baseui.toolbar.CoreToolbarView
+import com.core.config.domain.data.IAdPlaceName
+import com.core.utilities.setOnSingleClick
+import com.core.utilities.toast
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
+class MainChildOfHostFragment : BaseChildOfHostFragment<CoreFragmentMainBinding, MainHostEvent, MainHostViewModel>() {
+    override fun bindingProvider(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+    ): CoreFragmentMainBinding {
+        return CoreFragmentMainBinding.inflate(inflater, container, false)
+    }
+
+    override val hostViewModel: MainHostViewModel by viewModels(ownerProducer = { requireParentFragment() })
+    override val screenType: ScreenType
+        get() = CoreScreenType.Main
+
+    override fun initViews(savedInstanceState: Bundle?) {
+        super.initViews(savedInstanceState)
+        viewBinding.run {
+            toolbar.onToolbarListener = object : CoreToolbarView.OnToolbarListener {
+                override fun onAction() {
+                    hostViewModel.navigateTo(MainHostEvent.OpenSetting)
+                }
+            }
+
+            nativeAndBannerLayout.setOnSingleClick {
+                hostViewModel.navigateTo(MainHostEvent.OpenBannerAndNative)
+            }
+
+            nativeGalleryLayout.setOnSingleClick {
+                startActivity(Intent(requireContext(), NativeGalleryActivity::class.java))
+            }
+
+            nativeInListLayout.setOnSingleClick {
+                hostViewModel.navigateTo(MainHostEvent.OpenNativeInList)
+            }
+
+            nativePipTestLayout.setOnSingleClick {
+                startActivity(Intent(requireContext(), NativePipTestActivity::class.java))
+            }
+
+            nativeCollapsibleTestLayout.setOnSingleClick {
+                startActivity(Intent(requireContext(), CollapsibleNativeTestActivity::class.java))
+            }
+
+            showInterstitialLayout.setOnSingleClick {
+                showInterAd(AppAdPlaceName.FULLSCREEN_TEST) {
+                    toast("Show inter ad completed")
+                }
+            }
+
+            showRewardLayout.setOnSingleClick {
+//                showRewardAd(AppAdPlaceName.REWARD_TEST) { isShown, isEarnedReward, isNoAds ->
+//                    toast("Show reward ad completed $isEarnedReward")
+//                }
+                val ct = context ?: return@setOnSingleClick
+                startActivity(Intent(ct, RewardTestActivity::class.java))
+            }
+
+            showInterstitialLayoutLazyLoad.setOnSingleClick {
+                showInterAd(AppAdPlaceName.FULLSCREEN_TEST_LAZY_LOAD) {
+                    toast("Show inter ad completed")
+                }
+            }
+
+            showNativeInterstitial.setOnSingleClick {
+                showInterAd(AppAdPlaceName.FULLSCREEN_NATIVE_INTERSTITIAL) {
+                    toast("Show inter native ad completed")
+                }
+            }
+
+            loadInterstitialLayout.setOnSingleClick {
+                loadInterstitialAds(AppAdPlaceName.FULLSCREEN_TEST_LAZY_LOAD, oneTimeLoad = true)
+            }
+
+            shopLayout.setOnSingleClick {
+                hostViewModel.navigateTo(MainHostEvent.OpenShop)
+            }
+
+        }
+    }
+
+    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
+        return listOf(
+            AppAdPlaceName.ANCHORED_BOTTOM_HOME
+        )
+    }
+
+    override fun providerPreloadBannerNativeAdPlaceName(): List<IAdPlaceName> {
+        return listOf(
+            AppAdPlaceName.ANCHORED_NATIVE_IN_LIST_TEST,
+            AppAdPlaceName.ANCHORED_BANNER_TEST,
+            AppAdPlaceName.ANCHORED_NATIVE_TEST,
+
+        )
+    }
+
+    /***/
+    override fun providerInterAdPlaceName(): List<IAdPlaceName> {
+        return listOf(
+            AppAdPlaceName.FULLSCREEN_TEST,
+            AppAdPlaceName.FULLSCREEN_NATIVE_INTERSTITIAL,
+        )
+    }
+
+    override fun providerRewardAdPlaceName(): List<IAdPlaceName> {
+        return listOf(
+            AppAdPlaceName.REWARD_TEST
+        )
+    }
+
+    override fun onBannerNativeResult(adResource: AdLoadBannerNativeUiResource) {
+        when (adResource.commonAdPlaceName) {
+            AppAdPlaceName.ANCHORED_BOTTOM_HOME -> {
+                viewBinding.layoutBannerNative.processAdResource(
+                    adResource,
+                    AppAdPlaceName.ANCHORED_BOTTOM_HOME
+                )
+            }
+        }
+    }
+
+}

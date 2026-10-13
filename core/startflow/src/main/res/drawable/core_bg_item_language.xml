@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/_13dp"/>
+            <solid android:color="@color/startflow_language_v1_item_selected_background"/>
+            <stroke android:color="@color/startflow_language_v1_item_selected_border" android:width="@dimen/_1_5dp"/>
+        </shape>
+
+    </item>
+
+    <item >
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/_13dp"/>
+            <solid android:color="@color/startflow_language_v1_item_unselected_background"/>
+        </shape>
+    </item>
+
+</selector>

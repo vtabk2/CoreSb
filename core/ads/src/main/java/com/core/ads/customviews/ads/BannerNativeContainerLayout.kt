@@ -1,0 +1,478 @@
+package com.core.ads.customviews.ads
+
+import android.content.Context
+import android.graphics.Color
+import android.util.AttributeSet
+import android.view.Gravity
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
+import androidx.core.view.isNotEmpty
+import com.core.ads.R
+import com.core.ads.admob.AdmobManager
+import com.core.ads.domain.AdLoadBannerNativeUiResource
+import com.core.config.domain.data.IAdPlaceName
+import com.core.config.domain.data.AdType
+import com.core.config.domain.data.BannerSize
+import com.core.config.domain.data.NativeAdPlace
+import com.core.config.domain.data.NativeTemplateSize
+import com.core.utilities.changeSize
+import com.core.utilities.gone
+import com.core.utilities.util.Timber
+import com.core.utilities.visible
+import com.core.utilities.visibleIf
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.nativead.NativeAd
+
+class BannerNativeContainerLayout @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr) {
+    var onClose: (() -> Unit) ?= null
+    private var isAnchoredBannerSize = false
+
+    private var isNativeFullscreen = false
+
+    private var backgroundRes: Int? = null
+
+    private var backgroundAdsNotifyView: Int? = null
+
+    private var placeHolderView: PlaceHolderView? = null
+
+    private var adLoadBannerNativeUiResource: AdLoadBannerNativeUiResource? = null
+
+    /**
+     * Created on demand: only collapsible native places need it, and [setVisibility] may run
+     * before this layout finishes constructing.
+     */
+    private var collapsibleNativeControllerOrNull: CollapsibleNativeController? = null
+    private val collapsibleContainerIdentity = Any()
+
+    private val collapsibleNativeController: CollapsibleNativeController
+        get() = collapsibleNativeControllerOrNull
+            ?: CollapsibleNativeController(
+                anchorView = this,
+                containerIdentity = collapsibleContainerIdentity,
+                onClose = { onClose?.invoke() },
+            ).also { collapsibleNativeControllerOrNull = it }
+
+    private val customNativeAds: CustomNativeAds
+        get() {
+            return CustomNativeProvider.getInstance().getCustomNativeAds()
+        }
+
+    init {
+        context.theme.obtainStyledAttributes(
+            attrs, R.styleable.BannerNativeContainerLayout, 0, 0
+        ).apply {
+            val backgroundColorId = getColor(
+                R.styleable.BannerNativeContainerLayout_bnl_background,
+                Color.TRANSPARENT
+            )
+            setBackgroundColor(backgroundColorId)
+
+            backgroundRes = getResourceId(
+                R.styleable.BannerNativeContainerLayout_bnl_backgroundRes,
+                R.drawable.core_bg_native_ads
+            )
+            backgroundAdsNotifyView = getResourceId(
+                R.styleable.BannerNativeContainerLayout_bnl_backgroundAdsNotifyView,
+                R.drawable.gnt_rounded_corners_shape
+            )
+            isNativeFullscreen =
+                getBoolean(R.styleable.BannerNativeContainerLayout_bnl_isNativeFullscreen, false)
+        }
+        if (placeHolderView == null) {
+            initPlaceHolder(R.layout.banner_adapter_small_shimmer)
+        }
+        runCatching {
+            addView(placeHolderView)
+        }
+        placeHolderView?.startShimmer()
+    }
+
+    fun setAdSize(adType: AdType, bannerSize: BannerSize, nativeTemplateSize: NativeTemplateSize) {
+        isAnchoredBannerSize = false
+
+        val shimmerResId = when (adType) {
+
+            AdType.Banner -> {
+                when (bannerSize) {
+                    BannerSize.Anchored -> {
+                        isAnchoredBannerSize = true
+                        R.layout.banner_adapter_small_shimmer
+                    }
+
+                    BannerSize.AnchoredLarge -> {
+                        isAnchoredBannerSize = true
+                        R.layout.banner_adapter_anchord_large_shimmer
+                    }
+
+                    BannerSize.Inline -> R.layout.banner_adapter_medium_shimmer
+                    BannerSize.StandardLarge -> R.layout.banner_adapter_medium_shimmer
+                    BannerSize.StandardMedium -> R.layout.banner_adapter_medium_shimmer
+                }
+            }
+
+            AdType.Native -> {
+                resolveNativeShimmerLayout(nativeTemplateSize) {
+                    customNativeAds.createShimmerLayoutPlaceHolder(nativeTemplateSize = it)
+                }
+            }
+
+            else -> R.layout.gnt_small_template_view_shimmer
+        }
+
+
+        if (placeHolderView == null) {
+            initPlaceHolder(shimmerResId)
+        } else {
+            placeHolderView?.setPlaceHolder(shimmerResId)
+        }
+
+        if(findOldAdView() == null) {
+            // A shimmer takes the ad's place, so an expanded popup must not stay on screen.
+            collapsibleNativeControllerOrNull?.release()
+            removeAllViewInChildViewIfNeed()
+            runCatching {
+                addView(placeHolderView)
+            }
+            placeHolderView?.startShimmer()
+        }
+    }
+
+    private fun initPlaceHolder(@LayoutRes layoutResId: Int) {
+        placeHolderView = PlaceHolderView(context)
+        placeHolderView?.setPlaceHolder(layoutResId)
+        placeHolderView?.layoutParams = LayoutParams(
+            LayoutParams.MATCH_PARENT,
+            LayoutParams.WRAP_CONTENT
+        ).apply {
+            if (isNativeFullscreen) {
+                gravity = Gravity.BOTTOM
+            }
+        }
+    }
+
+//    override fun removeDetachedView(child: View?, animate: Boolean) {
+//        super.removeDetachedView(child, true)
+//    }
+
+    fun setNativeFullScreenLoading() {
+        val shimmerResId = R.layout.gnt_full_cta_bottom_template_view_shimmer
+        if (placeHolderView == null) {
+            initPlaceHolder(shimmerResId)
+        } else {
+            placeHolderView?.setPlaceHolder(shimmerResId)
+        }
+        collapsibleNativeControllerOrNull?.release()
+        removeAllViewInChildViewIfNeed()
+        addView(placeHolderView)
+        placeHolderView?.startShimmer()
+    }
+
+    fun onAdLoaded(adView: AdView) {
+        try {
+            if (adView.parent == this) return
+            (adView.parent as? ViewGroup)?.let { oldParent ->
+                // tránh animation/transition giữ child
+                try { oldParent.endViewTransition(adView) } catch (e: Throwable) {Timber.d("onAdLoaded error ${e.message}")}
+                oldParent.layoutTransition = null
+                oldParent.removeView(adView)
+            }
+            removeAllViewInChildViewIfNeed()
+            addView(adView)
+        } catch (e: Exception) {
+            // do nothing
+            Timber.d("onAdLoaded error ${e.message}")
+        }
+
+    }
+
+    private fun findOldAdView(): AdView? {
+        return try {
+            for (i in 0 until childCount) {
+                val child = getChildAt(i)
+                if (child is AdView) {
+                    return child
+                }
+            }
+            null
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    fun onAdLoaded(nativeAd: NativeAd, nativeAdPlace: NativeAdPlace) {
+        removeAllViewInChildViewIfNeed()
+        populateUnifiedNativeAdView(nativeAd, nativeAdPlace)
+    }
+
+    private fun removeAllViewInChildViewIfNeed() {
+//        collapsibleNativeControllerOrNull?.release()
+        if (isNotEmpty()) {
+            val childView = getChildAt(0)
+            if (childView is BaseNativeTemplateView) {
+                childView.removeAllViews()
+            }
+        }
+        removeAllViews()
+    }
+
+    private fun populateUnifiedNativeAdView(nativeAd: NativeAd, nativeAdPlace: NativeAdPlace) {
+        Timber.d("populateUnifiedNativeAdView nativeAdPlace $nativeAdPlace")
+        val borderColor =
+            if (nativeAdPlace.borderColor != null) nativeAdPlace.borderColor else "#" + Integer.toHexString(
+                ContextCompat.getColor(context, R.color.background_divider)
+            )
+
+        val style = NativeTemplateStyle.Builder()
+            .withCallToActionBackgroundColor(nativeAdPlace.backgroundCta)
+            .withCallToActionRadius(nativeAdPlace.ctaRadius)
+            .withCallToActionTypefaceColor(nativeAdPlace.ctaTextColor)
+            .withCallToActionTextSize(nativeAdPlace.ctaTextSizeDp?.toFloat() ?: 0f)
+            .withCtaBorderColor(nativeAdPlace.ctaBorderColor)
+            .withBorderColor(borderColor)
+            .withBackgroundColor(nativeAdPlace.backgroundColor)
+            .withCountDownSecond(nativeAdPlace.countDownTimer)
+            .withCloseStepCount(nativeAdPlace.closeStepCount)
+            .withStep1CountDownSecond(nativeAdPlace.step1CountDownTimer)
+            .withStep2CountDownSecond(nativeAdPlace.step2CountDownTimer)
+            .withBackgroundFullColor(nativeAdPlace.backgroundFullColor)
+            .withPrimaryTextTypefaceColor(nativeAdPlace.primaryTextColor)
+            .withPrimaryTextSize(nativeAdPlace.primaryTextSizeDp?.toFloat() ?: 0f)
+            .withTertiaryTextTypefaceColor(nativeAdPlace.bodyTextColor)
+            .withTertiaryTextSize(nativeAdPlace.bodyTextSizeDp?.toFloat() ?: 0f)
+            .withBackgroundResource(backgroundRes)
+            .withMainBackgroundRadius(nativeAdPlace.backgroundRadius)
+            .withBackgroundAdsNotifyView(backgroundAdsNotifyView)
+            .withBackgroundColorAdsNotifyView(nativeAdPlace.backgroundColorAdsNotifyView)
+            .withTextColorAdsNotifyView(nativeAdPlace.textColorAdsNotifyView)
+            .withMediaBackgroundColor(nativeAdPlace.mediaBackgroundColor)
+            .withIsEnableImmersive(nativeAdPlace.isEnableFullScreenImmersive)
+            .withHideTextCountDown(nativeAdPlace.hideTextCountDown)
+            .withHideTextSkipCountDown(nativeAdPlace.hideTextSkipCountDown)
+            .withHideProgressCountDown(nativeAdPlace.hideProgressCountDown)
+            .withProgressBarTint(nativeAdPlace.progressBarTint)
+            .withControlClosePosition(nativeAdPlace.controlClosePosition)
+            .withCollapsibleExpandCooldownSecond(nativeAdPlace.collapsibleExpandCooldownSecond)
+            .withNativeExpandTemplate(nativeAdPlace.nativeExpandTemplate)
+            .withAdPlaceName(nativeAdPlace.placeName.name)
+            .build()
+
+        val inlineTemplateView = when (nativeAdPlace.nativeTemplateSize) {
+
+            NativeTemplateSize.Medium -> NativeMediumTemplateView(context)
+
+            NativeTemplateSize.SmallCtaBottom -> NativeSmallCtaBottomTemplateView(context)
+
+            NativeTemplateSize.MediumCtaBottom -> NativeMediumCtaBottomTemplateView(context)
+
+            NativeTemplateSize.MediumShortCtaBottom -> NativeMediumShortCtaBottomTemplateView(context)
+
+            NativeTemplateSize.MediumCtaTop -> NativeMediumCtaTopTemplateView(context)
+
+            NativeTemplateSize.MediumCtaRight -> NativeMediumCtaRightTemplateView(context)
+
+            NativeTemplateSize.MediumCtaRightTop -> NativeMediumCtaRightTopTemplateView(context)
+
+            NativeTemplateSize.MediumMediaRight -> NativeMediumMediaRightTemplateView(context)
+
+            NativeTemplateSize.MediumMediaLeft -> NativeMediumMediaLeftTemplateView(context)
+
+            NativeTemplateSize.MediumMediaCtaRight -> NativeMediumMediaCtaRightTemplateView(context)
+
+            NativeTemplateSize.MediumMediaLeftCtaRight -> NativeMediumMediaLeftCtaRightTemplateView(context)
+
+            NativeTemplateSize.LargeMediaCtaRight -> NativeLargeMediaCtaRightTemplateView(context)
+
+            NativeTemplateSize.Small -> NativeSmallTemplateView(context)
+
+            NativeTemplateSize.SmallCtaTop -> NativeSmallCtaTopTemplateView(context)
+
+            NativeTemplateSize.SmallCtaRight -> NativeSmallCtaRightTemplateView(context)
+
+            NativeTemplateSize.SmallBannerCtaRight -> NativeSmallBannerCtaRightTemplateView(context)
+
+            NativeTemplateSize.SmallForPopup -> NativeSmallForPopupTemplateView(context)
+
+            NativeTemplateSize.SmallLong -> NativeSmallLongTemplateView(context)
+
+            NativeTemplateSize.FullCtaBottom -> NativeFullCtaBottomTemplateView(context)
+
+            NativeTemplateSize.FullCtaBottomOnboarding -> NativeFullCtaBottomOnboardingTemplateView(context)
+
+            NativeTemplateSize.FullCtaTop -> NativeFullCtaTopTemplateView(context)
+
+            NativeTemplateSize.FullCtaRight -> NativeFullCtaRightTemplateView(context)
+
+            NativeTemplateSize.MiniCtaRight -> NativeMiniCtaRightTemplateView(context)
+
+            NativeTemplateSize.FullInterstitialV1 -> NativeInterstitialV1View(context)
+
+            NativeTemplateSize.FullInterstitialV2 -> NativeInterstitialV2View(context)
+
+            NativeTemplateSize.FullInterstitialV3 -> NativeInterstitialV3View(context)
+
+            is NativeTemplateSize.CustomKey -> customNativeAds.createNativeAds(context, nativeAdPlace)
+        }
+        runCatching {
+            addView(inlineTemplateView)
+        }
+
+        if (nativeAdPlace.isNativeCollapsible) {
+            // The controller owns onClose for collapsible places: closing has to dismiss the popup.
+            collapsibleNativeController.bind(
+                inlineTemplateView = inlineTemplateView,
+                nativeAd = nativeAd,
+                styles = style,
+            )
+        } else {
+            inlineTemplateView.onClose = {
+                onClose?.invoke()
+            }
+            inlineTemplateView.applyStyles(style)
+            inlineTemplateView.setNativeAd(nativeAd)
+        }
+    }
+
+    fun processAdResource(adResource: AdLoadBannerNativeUiResource, placeName: IAdPlaceName, canVisible: Boolean = true, isHideNativeBannerWhenNetworkError: Boolean = false) {
+        Timber.d("processAdResource adResource $adResource")
+        if(adResource.commonAdPlaceName != placeName) return
+        try {
+            if(AdmobManager.isTestAd && AdmobManager.adPlacesDisabledWhenDetectTestAd.contains(placeName.name)) {
+                gone()
+                return
+            }
+        } catch (ex: Exception) {
+            Timber.e(ex.message)
+        }
+        adLoadBannerNativeUiResource = adResource
+        when (adResource) {
+            is AdLoadBannerNativeUiResource.NativeAdRefreshStarted -> {
+                collapsibleNativeControllerOrNull?.onNativeRefreshStarted()
+            }
+
+            is AdLoadBannerNativeUiResource.Loading -> {
+                    setAdSize(
+                        adResource.adType,
+                        adResource.bannerSize,
+                        adResource.nativeTemplateSize
+                    )
+                    visibleIf(canVisible)
+                collapsibleNativeController.release()
+            }
+
+            is AdLoadBannerNativeUiResource.AdFailed -> {
+                    gone()
+            }
+
+            is AdLoadBannerNativeUiResource.BannerAdLoaded -> {
+                    visibleIf(canVisible)
+                    onAdLoaded(adResource.bannerAd)
+            }
+
+            is AdLoadBannerNativeUiResource.NativeAdLoaded -> {
+                    visibleIf(canVisible)
+                    onAdLoaded(
+                        adResource.nativeAd,
+                        adResource.nativeAdPlace
+                    )
+            }
+
+            is AdLoadBannerNativeUiResource.AdNetworkError -> {
+                if (isHideNativeBannerWhenNetworkError) {
+                    gone()
+                }
+            }
+        }
+    }
+
+    fun processAdResourceOnRecyclerView(adResource: AdLoadBannerNativeUiResource, placeName: IAdPlaceName, isHideNativeBannerWhenNetworkError: Boolean = false) {
+        Timber.Forest.d("processAdResource adResource $adResource")
+        if (adResource.commonAdPlaceName != placeName) return
+        adLoadBannerNativeUiResource = adResource
+        when (adResource) {
+            is AdLoadBannerNativeUiResource.NativeAdRefreshStarted -> {
+                collapsibleNativeControllerOrNull?.onNativeRefreshStarted()
+            }
+
+            is AdLoadBannerNativeUiResource.AdFailed -> {
+                // Collapsing to 0x0 keeps this VISIBLE, so the popup has to be taken down by hand.
+                collapsibleNativeControllerOrNull?.onAnchorHidden()
+                changeSize(0, 0)
+            }
+
+            is AdLoadBannerNativeUiResource.Loading -> {
+                setAdSize(
+                    adResource.adType,
+                    adResource.bannerSize,
+                    adResource.nativeTemplateSize
+                )
+                visible()
+                changeSize(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+            }
+
+            is AdLoadBannerNativeUiResource.NativeAdLoaded -> {
+                visible()
+                onAdLoaded(
+                    adResource.nativeAd,
+                    adResource.nativeAdPlace
+                )
+                changeSize(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+            }
+
+            is AdLoadBannerNativeUiResource.BannerAdLoaded -> {
+                visible()
+                onAdLoaded(adResource.bannerAd)
+                changeSize(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+            }
+
+            is AdLoadBannerNativeUiResource.AdNetworkError -> {
+                if (isHideNativeBannerWhenNetworkError) {
+                    changeSize(0, 0)
+                }
+            }
+        }
+    }
+
+    override fun onDetachedFromWindow() {
+        collapsibleNativeControllerOrNull?.onAnchorDetached()
+        super.onDetachedFromWindow()
+        onClose = null
+    }
+
+    override fun setVisibility(visibility: Int) {
+        super.setVisibility(visibility)
+        // An expanded native lives in its own window; hiding this container never dismisses it.
+        if (visibility != VISIBLE) {
+            collapsibleNativeControllerOrNull?.onAnchorHidden()
+        }
+    }
+
+    fun pauseCloseCountDown() {
+        getCurrentNativeTemplateView()?.onHostPause()
+        collapsibleNativeControllerOrNull?.onHostPause()
+    }
+
+    fun resumeCloseCountDown() {
+        getCurrentNativeTemplateView()?.onHostResume()
+        collapsibleNativeControllerOrNull?.onHostResume()
+    }
+
+    /** Explicitly expands or collapses the currently displayed collapsible native ad. */
+    fun setNativeExpanded(expanded: Boolean) {
+        collapsibleNativeController.setExpanded(expanded)
+    }
+
+    /** Keeps the inline native visible while dismissing an expanded popup for refresh. */
+    fun onNativeRefreshStarted() {
+        collapsibleNativeControllerOrNull?.onNativeRefreshStarted()
+    }
+
+    private fun getCurrentNativeTemplateView(): BaseNativeTemplateView? {
+        if (childCount == 0) return null
+        return getChildAt(0) as? BaseNativeTemplateView
+    }
+}
