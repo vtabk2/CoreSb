@@ -138,10 +138,7 @@ abstract class BaseAdsBottomSheetDialogFragment<B : ViewBinding> : BottomSheetDi
             activity = requireActivity(),
             fragmentManager = childFragmentManager,
             remoteConfigRepository = remoteConfigRepository,
-            initRewardAdPlaceName = providerRewardAdPlaceName(),
-            initInterstitialAdPlaceName = providerInterAdPlaceName(),
-            initBannerNativeAdPlaceName = providerBannerNativeAdPlaceName(),
-            initPreloadBannerNativeAdPlaceName = providerPreloadBannerNativeAdPlaceName(),
+            initAdSlots = adSlots,
         ) {
             override fun onBannerNativeResult(adResource: AdLoadBannerNativeUiResource) {
                 this@BaseAdsBottomSheetDialogFragment.onBannerNativeResult(adResource)
@@ -302,6 +299,15 @@ abstract class BaseAdsBottomSheetDialogFragment<B : ViewBinding> : BottomSheetDi
      *
      * @return Danh sách các [AdPlaceName] cho quảng cáo banner/native cần tải trước.
      */
+    protected open val adSlots: List<AdSlot>
+        get() = buildList {
+            addAll(providerPreloadBannerNativeAdPlaceName().map { AdSlot.bannerNative(it, preload = true) })
+            addAll(providerBannerNativeAdPlaceName().map { AdSlot.bannerNative(it) })
+            addAll(providerInterAdPlaceName().map { AdSlot.interstitial(it) })
+            addAll(providerRewardAdPlaceName().map { AdSlot.rewarded(it) })
+        }
+
+    @Deprecated("Override adSlots instead.")
     open fun providerPreloadBannerNativeAdPlaceName(): List<IAdPlaceName> = listOf()
 
     /**
@@ -309,6 +315,7 @@ abstract class BaseAdsBottomSheetDialogFragment<B : ViewBinding> : BottomSheetDi
      *
      * @return Danh sách các [AdPlaceName] cho quảng cáo interstitial.
      */
+    @Deprecated("Override adSlots instead.")
     open fun providerInterAdPlaceName(): List<IAdPlaceName> = listOf()
 
     /**
@@ -316,6 +323,7 @@ abstract class BaseAdsBottomSheetDialogFragment<B : ViewBinding> : BottomSheetDi
      *
      * @return Danh sách các [AdPlaceName] cho quảng cáo reward.
      */
+    @Deprecated("Override adSlots instead.")
     open fun providerRewardAdPlaceName(): List<IAdPlaceName> = listOf()
 
     /**
@@ -323,6 +331,7 @@ abstract class BaseAdsBottomSheetDialogFragment<B : ViewBinding> : BottomSheetDi
      *
      * @return Danh sách các [AdPlaceName] cho quảng cáo banner/native.
      */
+    @Deprecated("Override adSlots instead.")
     open fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> = listOf()
 
     /**

@@ -18,7 +18,7 @@ import com.core.baseui.fragment.BaseChildOfHostFragment
 import com.core.baseui.fragment.CoreScreenType
 import com.core.baseui.fragment.ScreenType
 import com.core.baseui.toolbar.CoreToolbarView
-import com.core.config.domain.data.IAdPlaceName
+import com.core.baseui.AdSlot
 import com.core.utilities.setOnSingleClick
 import com.core.utilities.toast
 import dagger.hilt.android.AndroidEntryPoint
@@ -102,34 +102,16 @@ class MainChildOfHostFragment : BaseChildOfHostFragment<CoreFragmentMainBinding,
         }
     }
 
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        return listOf(
-            AppAdPlaceName.ANCHORED_BOTTOM_HOME
+    override val adSlots: List<AdSlot>
+        get() = listOf(
+            AdSlot.bannerNative(AppAdPlaceName.ANCHORED_BOTTOM_HOME),
+            AdSlot.bannerNative(AppAdPlaceName.ANCHORED_NATIVE_IN_LIST_TEST, preload = true),
+            AdSlot.bannerNative(AppAdPlaceName.ANCHORED_BANNER_TEST, preload = true),
+            AdSlot.bannerNative(AppAdPlaceName.ANCHORED_NATIVE_TEST, preload = true),
+            AdSlot.interstitial(AppAdPlaceName.FULLSCREEN_TEST),
+            AdSlot.interstitial(AppAdPlaceName.FULLSCREEN_NATIVE_INTERSTITIAL),
+            AdSlot.rewarded(AppAdPlaceName.REWARD_TEST),
         )
-    }
-
-    override fun providerPreloadBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        return listOf(
-            AppAdPlaceName.ANCHORED_NATIVE_IN_LIST_TEST,
-            AppAdPlaceName.ANCHORED_BANNER_TEST,
-            AppAdPlaceName.ANCHORED_NATIVE_TEST,
-
-        )
-    }
-
-    /***/
-    override fun providerInterAdPlaceName(): List<IAdPlaceName> {
-        return listOf(
-            AppAdPlaceName.FULLSCREEN_TEST,
-            AppAdPlaceName.FULLSCREEN_NATIVE_INTERSTITIAL,
-        )
-    }
-
-    override fun providerRewardAdPlaceName(): List<IAdPlaceName> {
-        return listOf(
-            AppAdPlaceName.REWARD_TEST
-        )
-    }
 
     override fun onBannerNativeResult(adResource: AdLoadBannerNativeUiResource) {
         when (adResource.commonAdPlaceName) {

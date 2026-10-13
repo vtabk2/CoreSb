@@ -329,10 +329,7 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity(), CoroutineSco
             activity = this,
             fragmentManager = supportFragmentManager,
             remoteConfigRepository = remoteConfigRepository,
-            initRewardAdPlaceName = providerRewardAdPlaceName(),
-            initInterstitialAdPlaceName = providerInterAdPlaceName(),
-            initBannerNativeAdPlaceName = providerBannerNativeAdPlaceName(),
-            initPreloadBannerNativeAdPlaceName = providerPreloadBannerNativeAdPlaceName(),
+            initAdSlots = adSlots,
             isWaitingLoad = isWaitingAds
         ) {
 
@@ -740,6 +737,15 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity(), CoroutineSco
      *
      * @return Danh sách các [IAdPlaceName] cho quảng cáo banner/native cần tải trước.
      */
+    protected open val adSlots: List<AdSlot>
+        get() = buildList {
+            addAll(providerPreloadBannerNativeAdPlaceName().map { AdSlot.bannerNative(it, preload = true) })
+            addAll(providerBannerNativeAdPlaceName().map { AdSlot.bannerNative(it) })
+            addAll(providerInterAdPlaceName().map { AdSlot.interstitial(it) })
+            addAll(providerRewardAdPlaceName().map { AdSlot.rewarded(it) })
+        }
+
+    @Deprecated("Override adSlots instead.")
     open fun providerPreloadBannerNativeAdPlaceName(): List<IAdPlaceName> = listOf()
 
     /**
@@ -747,6 +753,7 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity(), CoroutineSco
      *
      * @return Danh sách các [IAdPlaceName] cho quảng cáo interstitial.
      */
+    @Deprecated("Override adSlots instead.")
     open fun providerInterAdPlaceName(): List<IAdPlaceName> = listOf()
 
     /**
@@ -754,6 +761,7 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity(), CoroutineSco
      *
      * @return Danh sách các [IAdPlaceName] cho quảng cáo reward.
      */
+    @Deprecated("Override adSlots instead.")
     open fun providerRewardAdPlaceName(): List<IAdPlaceName> = listOf()
 
     /**
@@ -761,6 +769,7 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity(), CoroutineSco
      *
      * @return Danh sách các [IAdPlaceName] cho quảng cáo banner/native.
      */
+    @Deprecated("Override adSlots instead.")
     open fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> = listOf()
 
     /**
@@ -782,6 +791,10 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity(), CoroutineSco
             initRewardAdPlaceName = initRewardAdPlaceName,
             initInterstitialAdPlaceName = initInterstitialAdPlaceName
         )
+    }
+
+    fun reinitAdSlots(adSlots: List<AdSlot>) {
+        contextAds?.reinitAdSlots(adSlots)
     }
 
     fun readyAds() {

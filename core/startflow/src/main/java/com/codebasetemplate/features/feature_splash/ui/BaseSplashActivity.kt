@@ -16,12 +16,12 @@ import com.core.ads.domain.AdOpenAdUiResource
 import com.core.ads.domain.ConsentFormUiResource
 import com.core.ads.model.PreventShowManyInterstitialAds
 import com.core.analytics.AnalyticsEvent
+import com.core.baseui.AdSlot
 import com.core.baseui.countdown.JsgCountDownTimer
 import com.core.baseui.ext.collectFlowOn
 import com.core.config.data.FetchRemoteConfigState
 import com.core.config.domain.data.AdType
 import com.core.config.domain.data.CoreAdPlaceName
-import com.core.config.domain.data.IAdPlaceName
 import com.core.preference.SharedPrefs
 import com.core.startflow.OnBoardingConfigFactory
 import com.core.startflow.StartFlowActivity
@@ -184,37 +184,42 @@ abstract class BaseSplashActivity<VB : ViewBinding> : StartFlowActivity<VB>() {
         hideNavigationBar()
     }
 
-    override fun providerInterAdPlaceName(): List<IAdPlaceName> {
-        return mutableListOf<IAdPlaceName>().apply {
+    override val adSlots: List<AdSlot>
+        get() = buildList {
             if (getCurrentLanguageCode().isBlank() || isAlwaysShowIntroAndLanguageScreen) {
-                add(CoreAdPlaceName.ACTION_NEXT_IN_INTRODUCTION)
-                add(CoreAdPlaceName.ACTION_SKIP_IN_INTRODUCTION)
+                add(AdSlot.interstitial(CoreAdPlaceName.ACTION_NEXT_IN_INTRODUCTION))
+                add(AdSlot.interstitial(CoreAdPlaceName.ACTION_SKIP_IN_INTRODUCTION))
             }
-        }
-    }
 
-    override fun providerPreloadBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        val isLoadLanguage =
-            getCurrentLanguageCode().isBlank() || isAlwaysShowIntroAndLanguageScreen
-        return mutableListOf<IAdPlaceName>().apply {
+            val isLoadLanguage =
+                getCurrentLanguageCode().isBlank() || isAlwaysShowIntroAndLanguageScreen
             if (isLoadLanguage) {
                 if(remoteConfigRepository.getLanguageActivityConfig().isV2) {
-                    add(CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V2_NATIVE_1)
-                    add(CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V2_NATIVE_2)
-                    add(CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V2_NATIVE_3)
+                    add(AdSlot.bannerNative(CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V2_NATIVE_1, preload = true))
+                    add(AdSlot.bannerNative(CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V2_NATIVE_2, preload = true))
+                    add(AdSlot.bannerNative(CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V2_NATIVE_3, preload = true))
                 } else {
-                    add(CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V1_STEP_1)
-                    add(CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V1_STEP_2)
+                    add(AdSlot.bannerNative(CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V1_STEP_1, preload = true))
+                    add(AdSlot.bannerNative(CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V1_STEP_2, preload = true))
                 }
             }
 
             if (targetScreenFromShortCut == StartFlowScreenType.Uninstall.screenName) {
-                addAll(startFlowNavigator.uninstallPreloadAdPlaceNames())
+                addAll(startFlowNavigator.uninstallPreloadAdPlaceNames().map {
+                    AdSlot.bannerNative(it, preload = true)
+                })
             }
 
-            addAll(startFlowNavigator.mainPreloadAdPlaceNames())
+            addAll(startFlowNavigator.mainPreloadAdPlaceNames().map {
+                AdSlot.bannerNative(it, preload = true)
+            })
+
+            // Keep subclasses that still override the legacy provider hooks working.
+            addAll(providerPreloadBannerNativeAdPlaceName().map { AdSlot.bannerNative(it, preload = true) })
+            addAll(providerBannerNativeAdPlaceName().map { AdSlot.bannerNative(it) })
+            addAll(providerInterAdPlaceName().map { AdSlot.interstitial(it) })
+            addAll(providerRewardAdPlaceName().map { AdSlot.rewarded(it) })
         }
-    }
 
     override fun onResume() {
         super.onResume()
@@ -413,12 +418,7 @@ abstract class BaseSplashActivity<VB : ViewBinding> : StartFlowActivity<VB>() {
         }
 
         baseViewModel.isSplashAdsFlowStarted = true
-        reinitAdPlaceName(
-            initInterstitialAdPlaceName = providerInterAdPlaceName(),
-            initBannerNativeAdPlaceName = providerBannerNativeAdPlaceName(),
-            initRewardAdPlaceName = providerRewardAdPlaceName(),
-            initPreloadBannerNativeAdPlaceName = providerPreloadBannerNativeAdPlaceName()
-        )
+        reinitAdSlots(adSlots)
         readyAds()
         preloadAds()
 

@@ -85,12 +85,13 @@ abstract class ContextAds(
     var lifecycleScope: LifecycleCoroutineScope,
     val activity: Activity,
     var fragmentManager: FragmentManager,
-    initInterstitialAdPlaceName: List<IAdPlaceName>,
-    initRewardAdPlaceName: List<IAdPlaceName>,
-    initBannerNativeAdPlaceName: List<IAdPlaceName>,
-    initPreloadBannerNativeAdPlaceName: List<IAdPlaceName>,
+    initInterstitialAdPlaceName: List<IAdPlaceName> = emptyList(),
+    initRewardAdPlaceName: List<IAdPlaceName> = emptyList(),
+    initBannerNativeAdPlaceName: List<IAdPlaceName> = emptyList(),
+    initPreloadBannerNativeAdPlaceName: List<IAdPlaceName> = emptyList(),
     var identifier: String = UUID.randomUUID().toString(),
-    var isWaitingLoad: Boolean = false
+    var isWaitingLoad: Boolean = false,
+    initAdSlots: List<AdSlot> = emptyList(),
 ) {
     val activityRef = WeakReference<Activity>(activity)
     private var _retryLoadReward = 0
@@ -138,11 +139,29 @@ abstract class ContextAds(
     private val nativeRefreshPauseController = NativeRefreshPauseController()
 
     init {
-        adBannerOrNativePreload.addAll(initPreloadBannerNativeAdPlaceName)
-        adBannerOrNativeAll.addAll(initBannerNativeAdPlaceName)
-        adInterstitialAll.addAll(initInterstitialAdPlaceName)
-        adRewardAll.addAll(initRewardAdPlaceName)
+        registerAdSlots(initAdSlots)
+        registerAdSlots(initPreloadBannerNativeAdPlaceName.map { AdSlot.bannerNative(it, preload = true) })
+        registerAdSlots(initBannerNativeAdPlaceName.map { AdSlot.bannerNative(it) })
+        registerAdSlots(initInterstitialAdPlaceName.map { AdSlot.interstitial(it) })
+        registerAdSlots(initRewardAdPlaceName.map { AdSlot.rewarded(it) })
         handleObservableAds()
+    }
+
+    private fun registerAdSlots(adSlots: List<AdSlot>) {
+        adSlots.forEach { slot ->
+            when (slot.group) {
+                AdSlotGroup.BannerNative -> {
+                    if (slot.preload) {
+                        adBannerOrNativePreload.add(slot.adPlaceName)
+                    } else {
+                        adBannerOrNativeAll.add(slot.adPlaceName)
+                    }
+                }
+
+                AdSlotGroup.Interstitial -> adInterstitialAll.add(slot.adPlaceName)
+                AdSlotGroup.Rewarded -> adRewardAll.add(slot.adPlaceName)
+            }
+        }
     }
 
     fun ready() {
@@ -191,6 +210,15 @@ abstract class ContextAds(
             adRewardAll.clear()
             adRewardAll.addAll(initRewardAdPlaceName)
         }
+        syncNativeRefreshJobsWithAdPlaces()
+    }
+
+    fun reinitAdSlots(adSlots: List<AdSlot>) {
+        adBannerOrNativeAll.clear()
+        adBannerOrNativePreload.clear()
+        adInterstitialAll.clear()
+        adRewardAll.clear()
+        registerAdSlots(adSlots)
         syncNativeRefreshJobsWithAdPlaces()
     }
 
