@@ -24,6 +24,7 @@ class AdSlotTest {
         val slot = AdSlot.interstitial(RemoteAdPlaceName("native_interstitial"))
 
         assertEquals(AdSlotGroup.Interstitial, slot.group)
+        assertTrue(slot.preload)
     }
 
     @Test
@@ -31,5 +32,20 @@ class AdSlotTest {
         val slot = AdSlot.bannerNative(RemoteAdPlaceName("banner_native"))
 
         assertFalse(slot.preload)
+    }
+
+    @Test
+    fun `interstitial and rewarded can opt out of preload`() {
+        val interstitial = AdSlot.interstitial(
+            adPlaceName = RemoteAdPlaceName("lazy_interstitial"),
+            preload = false,
+        )
+        val rewarded = AdSlot.rewarded(
+            adPlaceName = RemoteAdPlaceName("lazy_rewarded"),
+            preload = false,
+        )
+
+        assertFalse(interstitial.preload)
+        assertFalse(rewarded.preload)
     }
 }

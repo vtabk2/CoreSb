@@ -117,8 +117,10 @@ abstract class ContextAds(
     private var adBannerOrNativePreload = mutableSetOf<IAdPlaceName>()
     private var adInterstitialLazyLoad = mutableSetOf<IAdPlaceName>()
     private var adInterstitialAll = mutableSetOf<IAdPlaceName>()
+    private var adInterstitialPreload = mutableSetOf<IAdPlaceName>()
     private var adRewardLazyLoad = mutableSetOf<IAdPlaceName>()
     private var adRewardAll = mutableSetOf<IAdPlaceName>()
+    private var adRewardPreload = mutableSetOf<IAdPlaceName>()
     private var adRewardWithoutAutoRetry = mutableSetOf<IAdPlaceName>()
     private val isAlwaysPreloadBannerNativeAdsWhenStart: Boolean by lazy {
         remoteConfigRepository.getAppConfig().isAlwaysPreloadBannerNativeAdsWhenStart
@@ -150,8 +152,15 @@ abstract class ContextAds(
                     }
                 }
 
-                AdSlotGroup.Interstitial -> adInterstitialAll.add(slot.adPlaceName)
-                AdSlotGroup.Rewarded -> adRewardAll.add(slot.adPlaceName)
+                AdSlotGroup.Interstitial -> {
+                    adInterstitialAll.add(slot.adPlaceName)
+                    if (slot.preload) adInterstitialPreload.add(slot.adPlaceName)
+                }
+
+                AdSlotGroup.Rewarded -> {
+                    adRewardAll.add(slot.adPlaceName)
+                    if (slot.preload) adRewardPreload.add(slot.adPlaceName)
+                }
             }
         }
     }
@@ -183,7 +192,9 @@ abstract class ContextAds(
         adBannerOrNativeAll.clear()
         adBannerOrNativePreload.clear()
         adInterstitialAll.clear()
+        adInterstitialPreload.clear()
         adRewardAll.clear()
+        adRewardPreload.clear()
         registerAdSlots(adSlots)
         syncNativeRefreshJobsWithAdPlaces()
     }
@@ -205,8 +216,10 @@ abstract class ContextAds(
         adBannerOrNativePreload.clear()
         adInterstitialLazyLoad.clear()
         adInterstitialAll.clear()
+        adInterstitialPreload.clear()
         adRewardLazyLoad.clear()
         adRewardAll.clear()
+        adRewardPreload.clear()
         adRewardWithoutAutoRetry.clear()
         bannerNativeRefreshJobs.values.forEach { it.cancel() }
         bannerNativeRefreshJobs.clear()
@@ -449,11 +462,11 @@ abstract class ContextAds(
         if(isWaitingLoad) return
         activityRef.get()?.let { activity ->
 
-            adInterstitialAll.forEach {
+            adInterstitialPreload.forEach {
                 adsManager.loadFullscreenAd(activity, it, identifier)
             }
 
-            adRewardAll.forEach {
+            adRewardPreload.forEach {
                 adsManager.loadFullscreenAd(activity, it, identifier)
             }
         }

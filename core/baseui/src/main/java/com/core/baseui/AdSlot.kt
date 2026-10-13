@@ -17,10 +17,10 @@ data class AdSlot(
         fun bannerNative(adPlaceName: IAdPlaceName, preload: Boolean = false) =
             AdSlot(adPlaceName, AdSlotGroup.BannerNative, preload)
 
-        fun interstitial(adPlaceName: IAdPlaceName) =
-            AdSlot(adPlaceName, AdSlotGroup.Interstitial)
+        fun interstitial(adPlaceName: IAdPlaceName, preload: Boolean = true) =
+            AdSlot(adPlaceName, AdSlotGroup.Interstitial, preload)
 
-        fun rewarded(adPlaceName: IAdPlaceName) =
-            AdSlot(adPlaceName, AdSlotGroup.Rewarded)
+        fun rewarded(adPlaceName: IAdPlaceName, preload: Boolean = true) =
+            AdSlot(adPlaceName, AdSlotGroup.Rewarded, preload)
     }
 }

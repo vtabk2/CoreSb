@@ -58,8 +58,11 @@ Quy tắc nhóm:
 - `AdSlot.bannerNative(place)` đăng ký banner/native thông thường.
 - `AdSlot.bannerNative(place, preload = true)` đăng ký banner/native cần preload.
 - `AdSlot.interstitial(place)` đăng ký interstitial, bao gồm cả placement
-  `native_interstitial`.
-- `AdSlot.rewarded(place)` đăng ký rewarded.
+  `native_interstitial`, và mặc định được preload.
+- `AdSlot.rewarded(place)` đăng ký rewarded và mặc định được preload.
+- Dùng `AdSlot.interstitial(place, preload = false)` hoặc
+  `AdSlot.rewarded(place, preload = false)` cho placement lazy-load, chỉ tải khi gọi
+  `loadInterstitialAds()` hoặc `loadRewardAds()`.
 
 Khi danh sách phụ thuộc runtime, dùng `buildList { ... }` và thêm từng slot đúng nhóm.
 Ví dụ, không đưa placement interstitial vào `bannerNative` chỉ vì quảng cáo được hiển thị
