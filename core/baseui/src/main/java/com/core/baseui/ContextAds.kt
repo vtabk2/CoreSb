@@ -85,10 +85,6 @@ abstract class ContextAds(
     var lifecycleScope: LifecycleCoroutineScope,
     val activity: Activity,
     var fragmentManager: FragmentManager,
-    initInterstitialAdPlaceName: List<IAdPlaceName> = emptyList(),
-    initRewardAdPlaceName: List<IAdPlaceName> = emptyList(),
-    initBannerNativeAdPlaceName: List<IAdPlaceName> = emptyList(),
-    initPreloadBannerNativeAdPlaceName: List<IAdPlaceName> = emptyList(),
     var identifier: String = UUID.randomUUID().toString(),
     var isWaitingLoad: Boolean = false,
     initAdSlots: List<AdSlot> = emptyList(),
@@ -140,10 +136,6 @@ abstract class ContextAds(
 
     init {
         registerAdSlots(initAdSlots)
-        registerAdSlots(initPreloadBannerNativeAdPlaceName.map { AdSlot.bannerNative(it, preload = true) })
-        registerAdSlots(initBannerNativeAdPlaceName.map { AdSlot.bannerNative(it) })
-        registerAdSlots(initInterstitialAdPlaceName.map { AdSlot.interstitial(it) })
-        registerAdSlots(initRewardAdPlaceName.map { AdSlot.rewarded(it) })
         handleObservableAds()
     }
 
@@ -187,32 +179,6 @@ abstract class ContextAds(
     fun isRewardReady(adPlaceName: IAdPlaceName): Boolean {
         return adsManager.isRewardReady(adPlaceName)
     }
-    fun reinitAdPlaceName(
-        initPreloadBannerNativeAdPlaceName: List<IAdPlaceName>? = null,
-        initBannerNativeAdPlaceName: List<IAdPlaceName>? = null,
-        initInterstitialAdPlaceName: List<IAdPlaceName>? = null,
-        initRewardAdPlaceName: List<IAdPlaceName>? = null
-    ) {
-        initPreloadBannerNativeAdPlaceName?.let {
-            adBannerOrNativePreload.clear()
-            adBannerOrNativePreload.addAll(initPreloadBannerNativeAdPlaceName)
-        }
-        initBannerNativeAdPlaceName?.let {
-            adBannerOrNativeAll.clear()
-            adBannerOrNativeAll.addAll(initBannerNativeAdPlaceName)
-        }
-
-        initInterstitialAdPlaceName?.let {
-            adInterstitialAll.clear()
-            adInterstitialAll.addAll(initInterstitialAdPlaceName)
-        }
-        initRewardAdPlaceName?.let {
-            adRewardAll.clear()
-            adRewardAll.addAll(initRewardAdPlaceName)
-        }
-        syncNativeRefreshJobsWithAdPlaces()
-    }
-
     fun reinitAdSlots(adSlots: List<AdSlot>) {
         adBannerOrNativeAll.clear()
         adBannerOrNativePreload.clear()
@@ -629,7 +595,7 @@ abstract class ContextAds(
                         adPlaceName
                     )
                 ) {
-                    activity.toast("Vui lòng check lại danh sách adPlaceName trong hàm providerFullAdPlaceName ${adPlaceName.name}, hoặc gọi loadRewardAds")
+                    activity.toast("Vui lòng check lại danh sách adPlaceName ${adPlaceName.name}, hoặc gọi loadRewardAds")
                 }
             }
             setHandleFullAds(adPlaceName, onHandleCompleted)
@@ -655,7 +621,7 @@ abstract class ContextAds(
         activityRef.get()?.let { activity ->
             if (activity.isAppDebuggable()) {
                 if (!adRewardAll.contains(adPlaceName) && !adRewardLazyLoad.contains(adPlaceName)) {
-                    activity.toast("Vui lòng check lại danh sách adPlaceName trong hàm providerRewardAdPlaceName ${adPlaceName.name}, hoặc gọi loadRewardAds")
+                    activity.toast("Vui lòng check lại danh sách adPlaceName ${adPlaceName.name}, hoặc gọi loadRewardAds")
                 }
             }
             _retryLoadReward = 0

@@ -10,7 +10,7 @@ import com.codebasetemplate.databinding.ActivityNativeGalleryPreviewBinding
 import com.codebasetemplate.required.ads.AppAdPlaceName
 import com.core.ads.customviews.ads.NativePictureInPicture
 import com.core.ads.domain.AdLoadBannerNativeUiResource
-import com.core.config.domain.data.IAdPlaceName
+import com.core.baseui.AdSlot
 import com.core.config.domain.data.NativeExpandTemplate
 import com.core.config.domain.data.NativeTemplateSize
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,7 +49,7 @@ class NativeGalleryPreviewActivity : CoreActivity<ActivityNativeGalleryPreviewBi
         configureContainerSize()
     }
 
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> = listOf(TEST_PLACE_NAME)
+    override val adSlots: List<AdSlot> = listOf(AdSlot.bannerNative(TEST_PLACE_NAME))
 
     override fun onBannerNativeResult(adResource: AdLoadBannerNativeUiResource) {
         when (adResource) {

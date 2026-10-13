@@ -5,8 +5,8 @@ import androidx.activity.viewModels
 import com.codebasetemplate.databinding.CoreActivityBaseBinding
 import com.codebasetemplate.features.feature_uninstall.ui.navigate.UninstallNavigateEvent
 import com.codebasetemplate.required.ads.AppAdPlaceName
+import com.core.baseui.AdSlot
 import com.core.baseui.HostBaseActivity
-import com.core.config.domain.data.IAdPlaceName
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,10 +36,14 @@ class UninstallActivityHost :
         replaceFragment(UninstallHostFragment())
     }
 
-    override fun providerPreloadBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        return listOf(
+    override val adSlots: List<AdSlot> = listOf(
+        AdSlot.bannerNative(
             AppAdPlaceName.ANCHORED_UNINSTALL_BOTTOM_STEP_1,
-            AppAdPlaceName.ANCHORED_UNINSTALL_BOTTOM_STEP_2
-        )
-    }
+            preload = true,
+        ),
+        AdSlot.bannerNative(
+            AppAdPlaceName.ANCHORED_UNINSTALL_BOTTOM_STEP_2,
+            preload = true,
+        ),
+    )
 }

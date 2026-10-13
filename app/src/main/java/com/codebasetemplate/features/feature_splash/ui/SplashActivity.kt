@@ -7,10 +7,10 @@ import android.view.LayoutInflater
 import androidx.activity.viewModels
 import com.codebasetemplate.features.feature_language.ui.LanguageActivityNavigator
 import com.core.ads.domain.AdLoadBannerNativeUiResource
+import com.core.baseui.AdSlot
 import com.core.baseui.R
 import com.core.baseui.ext.bindLiveData
 import com.core.config.domain.data.CoreAdPlaceName
-import com.core.config.domain.data.IAdPlaceName
 import com.core.startflow.OnBoardingConfigFactory
 import com.core.startflow.StartFlowScreenType
 import com.core.startflow.StartFlowShortcut
@@ -183,11 +183,9 @@ class SplashActivity : BaseSplashActivity<StartflowActivitySplashBinding>() {
     /**
      * Cung cấp vị trí quảng cáo banner/native cần preload và hiển thị trên màn Splash.
      */
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        return listOf(
-            CoreAdPlaceName.ANCHORED_BOTTOM_SPLASH
-        )
-    }
+    override val adSlots: List<AdSlot> = listOf(
+        AdSlot.bannerNative(CoreAdPlaceName.ANCHORED_BOTTOM_SPLASH)
+    )
 
     /**
      * Nhận kết quả load quảng cáo và bind vào view banner/native của Splash.

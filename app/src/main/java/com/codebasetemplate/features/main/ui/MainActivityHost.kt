@@ -17,8 +17,8 @@ import com.codebasetemplate.required.ads.AppAdPlaceName
 import com.codebasetemplate.required.shortcut.AppShortCut
 import com.codebasetemplate.required.update.InAppUpdateImpl
 import com.core.ads.domain.AdLoadBannerNativeUiResource
+import com.core.baseui.AdSlot
 import com.core.baseui.HostBaseActivity
-import com.core.config.domain.data.IAdPlaceName
 import com.google.firebase.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.messaging
@@ -139,11 +139,12 @@ class MainActivityHost : HostBaseActivity<CoreActivityMainBinding, MainFeatureEv
         }
     }
 
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        return if(isPreloadBannerNativeExit) {
-            listOf(AppAdPlaceName.ANCHORED_EXIT)
-        } else listOf()
-    }
+    override val adSlots: List<AdSlot>
+        get() = if (isPreloadBannerNativeExit) {
+            listOf(AdSlot.bannerNative(AppAdPlaceName.ANCHORED_EXIT))
+        } else {
+            emptyList()
+        }
 
     override fun onBannerNativeResult(adResource: AdLoadBannerNativeUiResource) {
         super.onBannerNativeResult(adResource)

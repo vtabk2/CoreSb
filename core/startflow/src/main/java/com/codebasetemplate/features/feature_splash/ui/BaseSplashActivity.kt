@@ -214,11 +214,6 @@ abstract class BaseSplashActivity<VB : ViewBinding> : StartFlowActivity<VB>() {
                 AdSlot.bannerNative(it, preload = true)
             })
 
-            // Keep subclasses that still override the legacy provider hooks working.
-            addAll(providerPreloadBannerNativeAdPlaceName().map { AdSlot.bannerNative(it, preload = true) })
-            addAll(providerBannerNativeAdPlaceName().map { AdSlot.bannerNative(it) })
-            addAll(providerInterAdPlaceName().map { AdSlot.interstitial(it) })
-            addAll(providerRewardAdPlaceName().map { AdSlot.rewarded(it) })
         }
 
     override fun onResume() {

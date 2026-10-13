@@ -6,7 +6,7 @@ import com.codebasetemplate.core.base_ui.CoreActivity
 import com.codebasetemplate.databinding.ActivityNativeSmallBannerCtaRightTestBinding
 import com.codebasetemplate.required.ads.AppAdPlaceName
 import com.core.ads.domain.AdLoadBannerNativeUiResource
-import com.core.config.domain.data.IAdPlaceName
+import com.core.baseui.AdSlot
 import com.core.config.domain.data.NativeTemplateSize
 import com.core.utilities.setOnSingleClick
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,7 +28,7 @@ class NativeSmallBannerCtaRightTestActivity :
         }
     }
 
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> = listOf(TEST_PLACE_NAME)
+    override val adSlots: List<AdSlot> = listOf(AdSlot.bannerNative(TEST_PLACE_NAME))
 
     override fun onBannerNativeResult(adResource: AdLoadBannerNativeUiResource) {
         when (adResource) {

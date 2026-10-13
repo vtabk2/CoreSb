@@ -16,11 +16,11 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import com.core.ads.BaseAdmobApplication
 import com.core.ads.domain.AdLoadBannerNativeUiResource
 import com.core.analytics.AnalyticsEvent
+import com.core.baseui.AdSlot
 import com.core.baseui.ext.autoCleared
 import com.core.baseui.ext.bindLiveData
 import com.core.baseui.recyclerview.NpaLinearLayoutManager
 import com.core.baseui.supportedlanguage.SupportedLanguage
-import com.core.config.domain.data.IAdPlaceName
 import com.core.utilities.getCurrentLanguageCode
 import com.core.utilities.gone
 import com.core.utilities.visible
@@ -227,30 +227,23 @@ class LanguageActivityV2FromSetting : StartFlowActivity<StartflowActivityLanguag
         }
     }
 
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        if (isRecreated) {
-            return listOf()
-        }
-        return mutableListOf<IAdPlaceName>().apply {
-            add(LANGUAGE_FROM_SETTING_NATIVE_AD_PLACE_NAME)
-            if ((isOpenFromSlash || backFromIntroduction) && isEnableIntroductionScreen) {
-                addAll(
-                    OnBoardingConfigFactory.getOnBoardingAdPlaceName(
-                        remoteConfigRepository.getOnBoardingConfig(),
-                        remoteConfigRepository.getAppConfig()
+    override val adSlots: List<AdSlot>
+        get() = buildList {
+            if (!isRecreated) {
+                add(AdSlot.bannerNative(LANGUAGE_FROM_SETTING_NATIVE_AD_PLACE_NAME))
+                if ((isOpenFromSlash || backFromIntroduction) && isEnableIntroductionScreen) {
+                    addAll(
+                        OnBoardingConfigFactory.getOnBoardingAdPlaceName(
+                            remoteConfigRepository.getOnBoardingConfig(),
+                            remoteConfigRepository.getAppConfig(),
+                        ).map { AdSlot.bannerNative(it) }
                     )
-                )
+                }
+            }
+            if (isFromSetting) {
+                add(AdSlot.interstitial(CoreAdPlaceName.FULLSCREEN_BACK_LANGUAGE_SETTING))
             }
         }
-    }
-
-    override fun providerInterAdPlaceName(): List<IAdPlaceName> {
-        return if (isFromSetting) {
-            listOf(CoreAdPlaceName.FULLSCREEN_BACK_LANGUAGE_SETTING)
-        } else {
-            listOf()
-        }
-    }
 
     override fun onBannerNativeResult(adResource: AdLoadBannerNativeUiResource) {
         viewBinding.layoutBannerNative.processAdResource(

@@ -10,12 +10,12 @@ import com.codebasetemplate.features.feature_uninstall.ui.navigate.UninstallNavi
 import com.codebasetemplate.required.ads.AppAdPlaceName
 import com.codebasetemplate.required.shortcut.AppScreenType
 import com.core.ads.domain.AdLoadBannerNativeUiResource
+import com.core.baseui.AdSlot
 import com.core.baseui.InsetsViewModel
 import com.core.baseui.fragment.BaseChildOfHostFragment
 import com.core.baseui.fragment.ScreenType
 import com.core.baseui.fragment.collectFlowOn
 import com.core.baseui.toolbar.CoreToolbarView
-import com.core.config.domain.data.IAdPlaceName
 import com.core.utilities.setOnSingleClick
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -60,17 +60,13 @@ class UninstallChildOfHostFragment :
         }
     }
 
-    override fun providerPreloadBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        return listOf(
-            AppAdPlaceName.ANCHORED_UNINSTALL_BOTTOM_STEP_2
-        )
-    }
-
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        return listOf(
-            AppAdPlaceName.ANCHORED_UNINSTALL_BOTTOM_STEP_1
-        )
-    }
+    override val adSlots: List<AdSlot> = listOf(
+        AdSlot.bannerNative(
+            AppAdPlaceName.ANCHORED_UNINSTALL_BOTTOM_STEP_2,
+            preload = true,
+        ),
+        AdSlot.bannerNative(AppAdPlaceName.ANCHORED_UNINSTALL_BOTTOM_STEP_1),
+    )
 
     override fun onBannerNativeResult(adResource: AdLoadBannerNativeUiResource) {
         viewBinding.layoutBannerNative.processAdResource(

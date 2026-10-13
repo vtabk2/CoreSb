@@ -38,13 +38,50 @@ trong `AppAdPlaceName` và bảo đảm `IAppProviderAdPlaceName` resolve đư�
 | `count_down_timer` | Số giây countdown; ví dụ trên dùng 5 giây. |
 | `step_1_count_down_timer`, `step_2_count_down_timer` | Override thời gian từng bước của V3; khi thiếu, fallback về `count_down_timer`. |
 
-## Cách gọi từ BaseActivity/BaseFragment
+## Khai báo placement bằng `AdSlot`
 
-Đăng ký preload trong danh sách interstitial:
+Các màn hình kế thừa `BaseActivity`, `BaseFragment`, dialog hoặc bottom sheet khai báo
+tất cả placement trong một property `adSlots`. Không còn override các hàm
+`provider*AdPlaceName` riêng lẻ.
 
 ```kotlin
-override fun providerInterAdPlaceName(): List<IAdPlaceName> = listOf(
-    AppAdPlaceName.FULLSCREEN_NATIVE_INTERSTITIAL,
+override val adSlots: List<AdSlot> = listOf(
+    AdSlot.bannerNative(AppAdPlaceName.ANCHORED_HOME),
+    AdSlot.bannerNative(AppAdPlaceName.ANCHORED_HOME_PRELOAD, preload = true),
+    AdSlot.interstitial(AppAdPlaceName.FULLSCREEN_NATIVE_INTERSTITIAL),
+    AdSlot.rewarded(AppAdPlaceName.REWARD_TEST),
+)
+```
+
+Quy tắc nhóm:
+
+- `AdSlot.bannerNative(place)` đăng ký banner/native thông thường.
+- `AdSlot.bannerNative(place, preload = true)` đăng ký banner/native cần preload.
+- `AdSlot.interstitial(place)` đăng ký interstitial, bao gồm cả placement
+  `native_interstitial`.
+- `AdSlot.rewarded(place)` đăng ký rewarded.
+
+Khi danh sách phụ thuộc runtime, dùng `buildList { ... }` và thêm từng slot đúng nhóm.
+Ví dụ, không đưa placement interstitial vào `bannerNative` chỉ vì quảng cáo được hiển thị
+bằng native template.
+
+Để thay toàn bộ danh sách sau khi remote config hoặc trạng thái flow thay đổi, gọi:
+
+```kotlin
+reinitAdSlots(adSlots)
+```
+
+`ContextAds` sẽ xóa các nhóm tự động hiện tại, đăng ký lại danh sách mới và đồng bộ các
+job refresh native. Constructor `ContextAds` cũng chỉ nhận `initAdSlots`; các tham số
+`init*AdPlaceName` và hàm `reinitAdPlaceName` cũ đã được loại bỏ.
+
+## Cách gọi từ BaseActivity/BaseFragment
+
+Đăng ký placement trong danh sách `adSlots`:
+
+```kotlin
+override val adSlots: List<AdSlot> = listOf(
+    AdSlot.interstitial(AppAdPlaceName.FULLSCREEN_NATIVE_INTERSTITIAL),
 )
 ```
 
@@ -65,9 +102,9 @@ showInterAd(AppAdPlaceName.FULLSCREEN_NATIVE_INTERSTITIAL) { isShown ->
 }
 ```
 
-`oneTimeLoad` điều khiển đăng ký preload của màn hình; không thay thế
-`is_auto_load_after_dismiss`. Không cần đưa placement này vào
-`providerPreloadBannerNativeAdPlaceName()` hay gọi `loadBannerNativeAd()`.
+`oneTimeLoad` điều khiển cách load chủ động; không thay thế
+`is_auto_load_after_dismiss`. Placement interstitial không cần đưa vào nhóm
+banner/native hoặc gọi `loadBannerNativeAd()`.
 
 ## Gọi trực tiếp AdsManager và chờ load
 
@@ -131,7 +168,7 @@ có thể đặt `false` để tránh load thêm khi chuẩn bị rời splash; 
 
 1. Đổi `ad_type: "native"` thành `"native_interstitial"` cho placement fullscreen độc lập;
    giữ native ad unit ID và các field giao diện.
-2. Chuyển đăng ký preload sang `providerInterAdPlaceName()` hoặc dùng `loadInterstitialAds()`.
+2. Chuyển đăng ký sang `AdSlot.interstitial(...)` trong `adSlots`, hoặc dùng `loadInterstitialAds()`.
 3. Giữ `showInterAd()` và nhận kết quả load/show qua luồng fullscreen.
 
 Native inline và cấu hình `native` cũ vẫn được hỗ trợ. Luồng interstitial thật rồi show

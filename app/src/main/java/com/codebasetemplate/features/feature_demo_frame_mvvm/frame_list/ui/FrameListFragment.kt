@@ -14,11 +14,11 @@ import com.codebasetemplate.features.main.ui.host.MainHostViewModel
 import com.codebasetemplate.required.ads.AppAdPlaceName
 import com.codebasetemplate.required.shortcut.AppScreenType
 import com.core.ads.domain.AdLoadBannerNativeUiResource
+import com.core.baseui.AdSlot
 import com.core.baseui.fragment.BaseChildOfHostFragment
 import com.core.baseui.fragment.ScreenType
 import com.core.baseui.fragment.collectFlowOn
 import com.core.baseui.toolbar.CoreToolbarView
-import com.core.config.domain.data.IAdPlaceName
 import com.core.utilities.gone
 import com.core.utilities.result.processResult
 import com.core.utilities.util.OnScrollLoadMore
@@ -76,9 +76,9 @@ class FrameListFragment :
         }
     }
 
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        return listOf(AppAdPlaceName.ANCHORED_NATIVE_IN_LIST_TEST)
-    }
+    override val adSlots: List<AdSlot> = listOf(
+        AdSlot.bannerNative(AppAdPlaceName.ANCHORED_NATIVE_IN_LIST_TEST)
+    )
 
     override fun onBannerNativeResult(adResource: AdLoadBannerNativeUiResource) {
         if (adResource.commonAdPlaceName == AppAdPlaceName.ANCHORED_NATIVE_IN_LIST_TEST) {

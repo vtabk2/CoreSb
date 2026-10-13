@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.recyclerview.widget.RecyclerView
 import com.core.config.domain.data.CoreAdPlaceName
-import com.core.config.domain.data.IAdPlaceName
+import com.core.baseui.AdSlot
 import com.codebasetemplate.features.feature_language.ui.v2.adapter.LanguageGroup
 import com.core.startflow.OnBoardingConfigFactory
 import com.codebasetemplate.util.EventTracking
@@ -43,19 +43,20 @@ class LanguageActivityV21 : BaseLanguageActivityV2FlowActivity() {
 
     override fun onApplyClicked() = Unit
 
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        return buildList {
-            add(languageNativeAdPlaceName)
+    override val adSlots: List<AdSlot>
+        get() = buildList {
+            add(AdSlot.bannerNative(languageNativeAdPlaceName))
             if ((isOpenFromSlash || backFromIntroduction) && isEnableIntroductionScreen) {
                 addAll(
                     OnBoardingConfigFactory.getOnBoardingAdPlaceName(
                         remoteConfigRepository.getOnBoardingConfig(),
-                        remoteConfigRepository.getAppConfig()
-                    )
+                        remoteConfigRepository.getAppConfig(),
+                    ).map { AdSlot.bannerNative(it) }
                 )
             }
-        } + CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V2_NATIVE_2 + CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V2_NATIVE_3
-    }
+            add(AdSlot.bannerNative(CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V2_NATIVE_2))
+            add(AdSlot.bannerNative(CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V2_NATIVE_3))
+        }
 
     companion object {
         internal const val CLICK_GUIDE_GROUP_INDEX = 2

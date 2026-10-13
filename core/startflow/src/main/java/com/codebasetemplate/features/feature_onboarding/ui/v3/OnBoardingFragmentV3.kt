@@ -18,10 +18,10 @@ import com.core.startflow.databinding.StartflowFragmentOnboardingV3Binding
 import com.codebasetemplate.features.feature_onboarding.ui.v1.OnBoardingEvent
 import com.codebasetemplate.util.EventTracking
 import com.core.ads.domain.AdLoadBannerNativeUiResource
+import com.core.baseui.AdSlot
 import com.core.baseui.fragment.BaseFragment
 import com.core.baseui.fragment.ScreenType
 import com.core.baseui.fragment.argument
-import com.core.config.domain.data.IAdPlaceName
 import com.core.config.domain.data.OnBoardingConfig
 import com.core.startflow.OnBoardingConfigFactory as StartFlowOnBoardingConfigFactory
 import com.core.startflow.onboarding.OnBoardingContentProvider
@@ -344,10 +344,13 @@ class OnBoardingFragmentV3 : BaseFragment<StartflowFragmentOnboardingV3Binding>(
         )
     }
 
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        if (!isShowAd) return listOf()
-        return StartFlowOnBoardingConfigFactory.getOnboardingV3AdPlaceNames(introductionPosition)
-    }
+    override val adSlots: List<AdSlot>
+        get() = if (isShowAd) {
+            StartFlowOnBoardingConfigFactory.getOnboardingV3AdPlaceNames(introductionPosition)
+                .map { AdSlot.bannerNative(it) }
+        } else {
+            emptyList()
+        }
 
     override fun onBannerNativeResult(adResource: AdLoadBannerNativeUiResource) {
         super.onBannerNativeResult(adResource)

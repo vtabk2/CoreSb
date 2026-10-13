@@ -8,9 +8,9 @@ import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.core.ads.BaseAdmobApplication
 import com.core.analytics.AnalyticsEvent
+import com.core.baseui.AdSlot
 import com.core.baseui.ext.collectFlowOn
 import com.core.config.domain.data.CoreAdPlaceName
-import com.core.config.domain.data.IAdPlaceName
 import com.core.utilities.setCurrentItemFixCrash
 import com.core.startflow.StartFlowActivity
 import com.core.startflow.StartFlowNavigator
@@ -225,17 +225,14 @@ class OnBoardingActivityV3 : StartFlowActivity<StartflowActivityOnboardingV3Bind
         }
     }
 
-    override fun providerInterAdPlaceName(): List<IAdPlaceName> {
-        return listOf(
-            CoreAdPlaceName.ACTION_NEXT_IN_INTRODUCTION,
-            CoreAdPlaceName.ACTION_SKIP_IN_INTRODUCTION
-        )
-    }
-
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        return OnBoardingConfigFactory.getOnBoardingAdPlaceName(
-            remoteConfigRepository.getOnBoardingConfig(),
-            remoteConfigRepository.getAppConfig()
+    override val adSlots: List<AdSlot> = buildList {
+        add(AdSlot.interstitial(CoreAdPlaceName.ACTION_NEXT_IN_INTRODUCTION))
+        add(AdSlot.interstitial(CoreAdPlaceName.ACTION_SKIP_IN_INTRODUCTION))
+        addAll(
+            OnBoardingConfigFactory.getOnBoardingAdPlaceName(
+                remoteConfigRepository.getOnBoardingConfig(),
+                remoteConfigRepository.getAppConfig(),
+            ).map { AdSlot.bannerNative(it) }
         )
     }
 

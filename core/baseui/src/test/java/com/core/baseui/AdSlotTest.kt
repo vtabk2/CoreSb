@@ -2,6 +2,7 @@ package com.core.baseui
 
 import com.core.config.domain.data.RemoteAdPlaceName
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -23,5 +24,12 @@ class AdSlotTest {
         val slot = AdSlot.interstitial(RemoteAdPlaceName("native_interstitial"))
 
         assertEquals(AdSlotGroup.Interstitial, slot.group)
+    }
+
+    @Test
+    fun `banner native defaults to non preload`() {
+        val slot = AdSlot.bannerNative(RemoteAdPlaceName("banner_native"))
+
+        assertFalse(slot.preload)
     }
 }

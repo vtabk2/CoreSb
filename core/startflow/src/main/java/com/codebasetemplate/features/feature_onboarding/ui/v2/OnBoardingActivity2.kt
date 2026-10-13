@@ -19,11 +19,11 @@ import com.core.startflow.StartFlowShortcut
 import com.core.ads.BaseAdmobApplication
 import com.core.ads.domain.AdLoadBannerNativeUiResource
 import com.core.analytics.AnalyticsEvent
+import com.core.baseui.AdSlot
 import com.core.baseui.ext.collectFlowOn
 import com.core.config.domain.data.AppConfig.Companion.DEFINE_INTRO_FULL_AD
 import com.core.config.domain.data.AppConfig.Companion.DEFINE_INTRO_HAVE_ADS
 import com.core.config.domain.data.AppConfig.Companion.DEFINE_INTRO_NO_ADS
-import com.core.config.domain.data.IAdPlaceName
 import com.core.startflow.onboarding.OnBoardingContentProvider
 import com.core.startflow.onboarding.activeOnBoardingContentProvider
 import com.core.utilities.getStatusBarHeight
@@ -343,16 +343,11 @@ class OnBoardingActivity2 : StartFlowActivity<StartflowActivityOnboardingBinding
         }
     }
 
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        return listOf(CoreAdPlaceName.ANCHORED_ONBOARDING_BOTTOM_V2)
-    }
-
-    override fun providerInterAdPlaceName(): List<IAdPlaceName> {
-        return listOf(
-            CoreAdPlaceName.ACTION_NEXT_IN_INTRODUCTION,
-            CoreAdPlaceName.ACTION_SKIP_IN_INTRODUCTION
-        )
-    }
+    override val adSlots: List<AdSlot> = listOf(
+        AdSlot.bannerNative(CoreAdPlaceName.ANCHORED_ONBOARDING_BOTTOM_V2),
+        AdSlot.interstitial(CoreAdPlaceName.ACTION_NEXT_IN_INTRODUCTION),
+        AdSlot.interstitial(CoreAdPlaceName.ACTION_SKIP_IN_INTRODUCTION),
+    )
 
     override fun onDestroy() {
         adsManager.releaseBannerNative(CoreAdPlaceName.ANCHORED_FULL_ONBOARDING_V2)

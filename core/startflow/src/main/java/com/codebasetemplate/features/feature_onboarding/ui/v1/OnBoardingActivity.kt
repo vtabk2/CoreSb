@@ -18,11 +18,11 @@ import com.core.startflow.StartFlowShortcut
 import com.core.ads.BaseAdmobApplication
 import com.core.ads.domain.AdLoadBannerNativeUiResource
 import com.core.analytics.AnalyticsEvent
+import com.core.baseui.AdSlot
 import com.core.baseui.ext.collectFlowOn
 import com.core.config.domain.data.AppConfig.Companion.DEFINE_INTRO_FULL_AD
 import com.core.config.domain.data.AppConfig.Companion.DEFINE_INTRO_HAVE_ADS
 import com.core.config.domain.data.AppConfig.Companion.DEFINE_INTRO_NO_ADS
-import com.core.config.domain.data.IAdPlaceName
 import com.core.startflow.onboarding.OnBoardingContentProvider
 import com.core.startflow.onboarding.activeOnBoardingContentProvider
 import com.core.utilities.getStatusBarHeight
@@ -341,15 +341,15 @@ class OnBoardingActivity : StartFlowActivity<StartflowActivityOnboardingBinding>
         }
     }
 
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        return OnBoardingConfigFactory.getOnBoardingAdPlaceName(remoteConfigRepository.getOnBoardingConfig(), remoteConfigRepository.getAppConfig())
-    }
-
-    override fun providerInterAdPlaceName(): List<IAdPlaceName> {
-        return listOf(
-            CoreAdPlaceName.ACTION_NEXT_IN_INTRODUCTION,
-            CoreAdPlaceName.ACTION_SKIP_IN_INTRODUCTION
+    override val adSlots: List<AdSlot> = buildList {
+        addAll(
+            OnBoardingConfigFactory.getOnBoardingAdPlaceName(
+                remoteConfigRepository.getOnBoardingConfig(),
+                remoteConfigRepository.getAppConfig(),
+            ).map { AdSlot.bannerNative(it) }
         )
+        add(AdSlot.interstitial(CoreAdPlaceName.ACTION_NEXT_IN_INTRODUCTION))
+        add(AdSlot.interstitial(CoreAdPlaceName.ACTION_SKIP_IN_INTRODUCTION))
     }
 
     override fun onDestroy() {

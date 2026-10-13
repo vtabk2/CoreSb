@@ -22,13 +22,13 @@ import com.core.startflow.StartFlowShortcut
 import com.core.ads.BaseAdmobApplication
 import com.core.ads.domain.AdLoadBannerNativeUiResource
 import com.core.analytics.AnalyticsEvent
+import com.core.baseui.AdSlot
 import com.core.baseui.executor.AppExecutors
 import com.core.baseui.ext.autoCleared
 import com.core.baseui.ext.bindLiveData
 import com.core.baseui.recyclerview.NpaLinearLayoutManager
 import com.core.baseui.supportedlanguage.SupportedLanguage
 import com.core.baseui.toolbar.CoreToolbarView
-import com.core.config.domain.data.IAdPlaceName
 import com.core.utilities.getCurrentLanguageCode
 import com.core.utilities.gone
 import com.core.utilities.visible
@@ -247,18 +247,23 @@ class LanguageActivity : StartFlowActivity<StartflowActivityLanguageBinding>() {
         }
     }
 
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        if (isRecreated) {
-            return listOf()
-        }
-        return mutableListOf<IAdPlaceName>().apply {
-            add(CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V1_STEP_1)
-            add(CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V1_STEP_2)
-            if ((isOpenFromSlash || backFromIntroduction) && isEnableIntroductionScreen) {
-                addAll(OnBoardingConfigFactory.getOnBoardingAdPlaceName(remoteConfigRepository.getOnBoardingConfig(), remoteConfigRepository.getAppConfig()))
+    override val adSlots: List<AdSlot>
+        get() = if (isRecreated) {
+            emptyList()
+        } else {
+            buildList {
+                add(AdSlot.bannerNative(CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V1_STEP_1))
+                add(AdSlot.bannerNative(CoreAdPlaceName.ANCHORED_CHANGE_LANGUAGE_V1_STEP_2))
+                if ((isOpenFromSlash || backFromIntroduction) && isEnableIntroductionScreen) {
+                    addAll(
+                        OnBoardingConfigFactory.getOnBoardingAdPlaceName(
+                            remoteConfigRepository.getOnBoardingConfig(),
+                            remoteConfigRepository.getAppConfig(),
+                        ).map { AdSlot.bannerNative(it) }
+                    )
+                }
             }
         }
-    }
 
     override fun onBannerNativeResult(adResource: AdLoadBannerNativeUiResource) {
         val adState = when (adResource) {

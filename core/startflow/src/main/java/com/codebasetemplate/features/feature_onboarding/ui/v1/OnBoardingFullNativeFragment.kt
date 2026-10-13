@@ -11,10 +11,10 @@ import com.core.startflow.databinding.StartflowFragmentOnboardingFullNativeBindi
 import com.core.startflow.OnBoardingConfigFactory
 import com.core.startflow.StartFlowScreenType
 import com.core.ads.domain.AdLoadBannerNativeUiResource
+import com.core.baseui.AdSlot
 import com.core.baseui.R
 import com.core.baseui.fragment.BaseFragment
 import com.core.baseui.fragment.ScreenType
-import com.core.config.domain.data.IAdPlaceName
 import com.core.config.domain.data.NativeAdPlace
 import com.core.utilities.getStatusBarHeight
 import com.core.utilities.padding
@@ -72,8 +72,6 @@ class OnBoardingFullNativeFragment : BaseFragment<StartflowFragmentOnboardingFul
         viewBinding.layoutBannerNative.processAdResource(adResource, nativeAdPlaceName)
     }
 
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        return listOf(nativeAdPlaceName)
-    }
+    override val adSlots: List<AdSlot> = listOf(AdSlot.bannerNative(nativeAdPlaceName))
 
 }

@@ -9,7 +9,7 @@ import com.codebasetemplate.databinding.ActivityNativeCollapsibleTestBinding
 import com.codebasetemplate.required.ads.AppAdPlaceName
 import com.core.ads.domain.AdLoadBannerNativeUiResource
 import com.core.baseui.toolbar.CoreToolbarView
-import com.core.config.domain.data.IAdPlaceName
+import com.core.baseui.AdSlot
 import com.core.utilities.setOnSingleClick
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,9 +40,7 @@ class CollapsibleNativeTestActivity : CoreActivity<ActivityNativeCollapsibleTest
         }
     }
 
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        return listOf(TEST_PLACE_NAME)
-    }
+    override val adSlots: List<AdSlot> = listOf(AdSlot.bannerNative(TEST_PLACE_NAME))
 
     override fun onBannerNativeResult(adResource: AdLoadBannerNativeUiResource) {
         when (adResource) {

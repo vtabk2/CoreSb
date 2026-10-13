@@ -18,11 +18,11 @@ import com.core.startflow.OnBoardingConfigFactory
 import com.codebasetemplate.features.feature_onboarding.ui.v1.OnBoardingEvent
 import com.codebasetemplate.features.feature_onboarding.ui.v1.OnBoardingViewModel
 import com.core.ads.domain.AdLoadBannerNativeUiResource
+import com.core.baseui.AdSlot
 import com.core.baseui.R as BaseUiR
 import com.core.baseui.fragment.BaseFragment
 import com.core.baseui.fragment.ScreenType
 import com.core.baseui.fragment.argument
-import com.core.config.domain.data.IAdPlaceName
 import com.core.config.domain.data.NativeAdPlace
 import com.core.utilities.getStatusBarHeight
 import com.core.utilities.padding
@@ -104,9 +104,9 @@ class OnBoardingFullNativeFragmentV3 : BaseFragment<StartflowFragmentOnboardingF
         super.onDestroyView()
     }
 
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        return OnBoardingConfigFactory.getOnboardingV3AdPlaceNames(introductionPosition)
-    }
+    override val adSlots: List<AdSlot> =
+        OnBoardingConfigFactory.getOnboardingV3AdPlaceNames(introductionPosition)
+            .map { AdSlot.bannerNative(it) }
 
     private fun View.prepareDelayedVisible(isShow: Boolean) {
         isGone = !isShow

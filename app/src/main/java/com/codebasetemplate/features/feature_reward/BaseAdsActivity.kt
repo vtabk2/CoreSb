@@ -2,8 +2,8 @@ package com.codebasetemplate.features.feature_reward
 
 import androidx.viewbinding.ViewBinding
 import com.codebasetemplate.required.ads.AppAdPlaceName
+import com.core.baseui.AdSlot
 import com.core.baseui.BaseActivity
-import com.core.config.domain.data.IAdPlaceName
 
 abstract class BaseAdsActivity<B : ViewBinding> : BaseActivity<B>() {
 
@@ -24,7 +24,7 @@ abstract class BaseAdsActivity<B : ViewBinding> : BaseActivity<B>() {
 
     open fun cancelRewarded() {}
 
-    override fun providerRewardAdPlaceName(): List<IAdPlaceName> {
-        return listOf(AppAdPlaceName.REWARD_TEST)
-    }
+    override val adSlots: List<AdSlot> = listOf(
+        AdSlot.rewarded(AppAdPlaceName.REWARD_TEST)
+    )
 }

@@ -9,7 +9,7 @@ import com.codebasetemplate.required.ads.AppAdPlaceName
 import com.core.ads.customviews.ads.NativePictureInPicture
 import com.core.ads.domain.AdLoadBannerNativeUiResource
 import com.core.baseui.toolbar.CoreToolbarView
-import com.core.config.domain.data.IAdPlaceName
+import com.core.baseui.AdSlot
 import com.core.utilities.setOnSingleClick
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,9 +39,9 @@ class NativePipTestActivity : CoreActivity<ActivityNativePipTestBinding>() {
         }
     }
 
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        return listOf(AppAdPlaceName.ANCHORED_NATIVE_PIP_HOME)
-    }
+    override val adSlots: List<AdSlot> = listOf(
+        AdSlot.bannerNative(AppAdPlaceName.ANCHORED_NATIVE_PIP_HOME)
+    )
 
     override fun onBannerNativeResult(adResource: AdLoadBannerNativeUiResource) {
         nativePictureInPicture.processAdResource(

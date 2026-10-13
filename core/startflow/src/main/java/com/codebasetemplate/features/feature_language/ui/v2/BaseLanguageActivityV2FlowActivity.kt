@@ -20,12 +20,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.core.ads.BaseAdmobApplication
 import com.core.ads.domain.AdLoadBannerNativeUiResource
 import com.core.analytics.AnalyticsEvent
+import com.core.baseui.AdSlot
 import com.core.baseui.ext.autoCleared
 import com.core.baseui.ext.bindLiveData
 import com.core.baseui.recyclerview.NpaLinearLayoutManager
 import com.core.baseui.supportedlanguage.SupportedLanguage
 import com.core.config.domain.data.CoreAdPlaceName
-import com.core.config.domain.data.IAdPlaceName
 import com.core.utilities.getCurrentLanguageCode
 import com.core.utilities.gone
 import com.core.utilities.visible
@@ -351,21 +351,13 @@ abstract class BaseLanguageActivityV2FlowActivity : StartFlowActivity<StartflowA
         return view.top - viewBinding.rvLanguage.paddingTop
     }
 
-    override fun providerBannerNativeAdPlaceName(): List<IAdPlaceName> {
-        if (isRecreated) return emptyList()
-
-        return buildList {
-            add(languageNativeAdPlaceName)
+    override val adSlots: List<AdSlot>
+        get() = buildList {
+            if (!isRecreated) add(AdSlot.bannerNative(languageNativeAdPlaceName))
+            if (isFromSetting) {
+                add(AdSlot.interstitial(CoreAdPlaceName.FULLSCREEN_BACK_LANGUAGE_SETTING))
+            }
         }
-    }
-
-    override fun providerInterAdPlaceName(): List<IAdPlaceName> {
-        return if (isFromSetting) {
-            listOf(CoreAdPlaceName.FULLSCREEN_BACK_LANGUAGE_SETTING)
-        } else {
-            emptyList()
-        }
-    }
 
     override fun onBannerNativeResult(adResource: AdLoadBannerNativeUiResource) {
         viewBinding.layoutBannerNative.processAdResource(adResource, languageNativeAdPlaceName)
